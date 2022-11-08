@@ -1,9 +1,17 @@
 {
-    "name": "Hello, World!",
+    "name": "Cucumbro!",
     "version": "1.0",
     "manifest_version": 3,
+    "icons": {
+        "16": "Resources/Icon/pixil-frame-0.png",
+        "32": "Resources/Icon/pixil-frame-0 (1).png",
+        "48": "Resources/Icon/pixil-frame-0 (2).png",
+        "128": "Resources/Icon/pixil-frame-0 (3).png"
+      },
     "background": {
       "service_worker": "background.js"
     },
-    "action": {}
+    "action": {
+        "default_popup": "popup.html"
+    }
   }
