@@ -1,0 +1,17 @@
+.container{
+    background-color: lightskyblue;
+    padding: 3vh 3vh 3vh 3vh;
+    border-style: inset;
+    border-width: thick;
+    border-color:lightblue;
+    flex-direction: column;
+    font-family: fantasy;
+    text-decoration: solid;
+    text-align: center;
+    width: 80px;
+    color: rgb(255, 255, 255);
+}
+
+button {
+    margin: 2px 2px 2px 2px;
+}

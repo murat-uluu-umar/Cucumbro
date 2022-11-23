@@ -1,17 +1,34 @@
 {
-    "name": "Cucumbro!",
-    "version": "1.0",
-    "manifest_version": 3,
-    "icons": {
-        "16": "Resources/Icon/pixil-frame-0.png",
-        "32": "Resources/Icon/pixil-frame-0 (1).png",
-        "48": "Resources/Icon/pixil-frame-0 (2).png",
-        "128": "Resources/Icon/pixil-frame-0 (3).png"
-      },
+  "name": "Cucumbro!",
+  "version": "1.0",
+  "manifest_version": 3,
+  "icons": {
+    "16": "Resources/Icon/pixil-frame-0.png",
+    "32": "Resources/Icon/pixil-frame-0 (1).png",
+    "48": "Resources/Icon/pixil-frame-0 (2).png",
+    "128": "Resources/Icon/pixil-frame-0 (3).png"
+  },
+  "permissions": [
+    "notifications",
+    "nativeMessaging"
+  ],
     "background": {
-      "service_worker": "background.js"
-    },
-    "action": {
-        "default_popup": "popup.html"
+    "service_worker": "background.js",
+    "type" : "module"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "orderly/start.js",
+        "orderly/stopwatch_layout.js"
+      ],
+      "matches": [
+        "https://developer.chrome.com/docs/extensions/*",
+        "https://developer.chrome.com/docs/webstore/*"
+      ]
     }
+  ],
+  "action": {
+    "default_popup": "layouts/state.html"
   }
+}
