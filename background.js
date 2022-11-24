@@ -9,7 +9,12 @@ var state = START;
 
 // notificaton
 function notification() {
-  console.log("Do your job!");
+    chrome.notifications.create("countdownEnd", {
+        iconUrl: "Resources/Icon/pixil-frame-0 (3).png",
+        title: "⏰ Cucumbro!",
+        message: "Return to your job",
+        type: "basic"
+    })
 }
 
 // stopwatch
