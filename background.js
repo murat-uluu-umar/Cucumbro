@@ -9,12 +9,12 @@ var state = START;
 
 // notificaton
 function notification() {
-    chrome.notifications.create("countdownEnd", {
-        iconUrl: "Resources/Icon/pixil-frame-0 (3).png",
-        title: "⏰ Cucumbro!",
-        message: "Return to your job",
-        type: "basic"
-    })
+  chrome.notifications.create("countdownEnd", {
+    iconUrl: "Resources/Icon/pixil-frame-0 (3).png",
+    title: "⏰ Cucumbro!",
+    message: "Return to your job",
+    type: "basic",
+  });
 }
 
 // stopwatch
@@ -22,6 +22,29 @@ var stopwatchDelay = 30;
 var interval = null;
 var delay = 1000;
 var restTime = 0;
+var is_divert = false;
+
+function stopwatchTick() {
+  if (interval === null) {
+    interval = setInterval(() => {
+      stopwatchDelay++;
+    }, delay);
+  }
+}
+
+function pauseStopwatch() {
+  clearInterval(interval);
+  interval = null;
+}
+
+function stopwatchEnd() {
+  if (interval !== null) clearInterval(interval);
+  interval = null;
+  restTime = stopwatchDelay / 3;
+  console.log(restTime);
+  console.log(stopwatchDelay);
+  stopwatchDelay = 0;
+}
 
 // countdown
 const ALARM = "countdown";
@@ -52,23 +75,19 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       state = request.value;
       break;
     case "stopwatchTick":
-      if (interval === null) {
-        interval = setInterval(() => {
-          stopwatchDelay++;
-        }, delay);
-      }
+      stopwatchTick();
       sendResponse(stopwatchDelay);
       break;
     case "stopwatchEnd":
-      if (interval !== null) clearInterval(interval);
-      interval = null;
-      restTime = stopwatchDelay / 3;
-      console.log(restTime);
-      console.log(stopwatchDelay);
-      stopwatchDelay = 0;
+      stopwatchEnd();
       break;
     case "countdownInit":
       countdownInit(request.value);
+      break;
+    case "divert":
+      is_divert = !is_divert;
+      divert();
+      break;
   }
 });
 
@@ -79,3 +98,11 @@ chrome.alarms.onAlarm.addListener((alarm) => {
   chrome.alarms.clearAll();
   notification();
 });
+
+// divert
+function devirt() {
+  if (interval) {
+    if (!is_divert) {
+    }
+  }
+}

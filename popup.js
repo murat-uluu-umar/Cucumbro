@@ -13,6 +13,7 @@ var startBtn = document.getElementById("startBtn");
 var mins = document.getElementById("tens");
 var seconds = document.getElementById("seconds");
 var restBtn = document.getElementById("restBtn");
+var divertBtn = document.getElementById("divertBtn");
 
 // countdown
 var cmins = document.getElementById("mins");
@@ -39,6 +40,7 @@ const stopwatch = {
       chrome.runtime.sendMessage({ msg: "stopwatchEnd" }, (time) => {});
     }
   },
+
 };
 
 const countdown = {
@@ -79,6 +81,9 @@ function updatePanel() {
         restBtn.onclick = () => {
           stopwatch.end();
           changeState(COUNTDOWN);
+        };
+        divertBtn.onclick = () => {
+          divert();
         };
         break;
       case COUNTDOWN:
@@ -134,4 +139,9 @@ function tickHandler() {
   ) {
     if (request.msg == "tick") updateDigits(request.value);
   });
+}
+
+function divert() {
+  chrome.runtime.sendMessage({ msg: "divert" }, (response) => {});
+  updatePanel();
 }
