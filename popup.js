@@ -35,6 +35,7 @@ const stopwatch = {
   end: () => {
     if (this.interval !== null) {
       clearInterval(this.interval);
+      interval = null;
       chrome.runtime.sendMessage({ msg: "stopwatchEnd" }, (time) => {});
     }
   },
@@ -54,6 +55,7 @@ const countdown = {
   end: () => {
     if (this.interval !== null) {
       clearInterval(this.interval);
+      interval = null;
       changeState(START);
     }
   },
@@ -82,7 +84,7 @@ function updatePanel() {
       case COUNTDOWN:
         countdownPanel.style.display = "block";
         countdown.update();
-        tickHandler()
+        tickHandler();
         countdownEndHandler();
         break;
     }
@@ -125,8 +127,11 @@ function countdownEndHandler() {
 }
 
 function tickHandler() {
-  chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    if (request.msg == 'tick')
-      updateDigits(request.value)
+  chrome.runtime.onMessage.addListener(function (
+    request,
+    sender,
+    sendResponse
+  ) {
+    if (request.msg == "tick") updateDigits(request.value);
   });
 }

@@ -29,7 +29,10 @@ function countdownInit() {
       var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       var seconds = Math.floor((distance % (1000 * 60)) / 1000);
       result = { minutes: minutes, seconds: seconds };
-      chrome.runtime.sendMessage({ msg: "tick", value: result }, (response) => {});
+      chrome.runtime.sendMessage(
+        { msg: "tick", value: result },
+        (response) => {}
+      );
     }
   });
 }
@@ -53,6 +56,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       break;
     case "stopwatchEnd":
       if (interval !== null) clearInterval(interval);
+      interval = null;
       restTime = stopwatchDelay / 3;
       console.log(restTime);
       console.log(stopwatchDelay);
