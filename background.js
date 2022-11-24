@@ -9,12 +9,12 @@ var state = START;
 
 // notificaton
 function notification() {
-    chrome.notifications.create("countdownEnd", {
-        iconUrl: "Resources/Icon/pixil-frame-0 (3).png",
-        title: "⏰ Cucumbro!",
-        message: "Return to your job",
-        type: "basic"
-    })
+  chrome.notifications.create("countdownEnd", {
+    iconUrl: "Resources/Icon/pixil-frame-0 (3).png",
+    title: "⏰ Cucumbro!",
+    message: "Return to your job",
+    type: "basic",
+  });
 }
 
 // stopwatch
@@ -22,6 +22,25 @@ var stopwatchDelay = 30;
 var interval = null;
 var delay = 1000;
 var restTime = 0;
+
+function stopwatchStart() {
+  if (interval === null) {
+    interval = setInterval(() => {
+      stopwatchDelay++;
+      chrome.runtime.sendMessage({
+        msg: "stopwatchTick",
+        value: stopwatchDelay,
+      });
+    }, delay);
+  }
+}
+
+function stopwatchEnd() {
+  if (interval !== null) clearInterval(interval);
+  interval = null;
+  restTime = stopwatchDelay / 3;
+  stopwatchDelay = 0;
+}
 
 // countdown
 const ALARM = "countdown";
@@ -51,21 +70,11 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     case "setState":
       state = request.value;
       break;
-    case "stopwatchTick":
-      if (interval === null) {
-        interval = setInterval(() => {
-          stopwatchDelay++;
-        }, delay);
-      }
-      sendResponse(stopwatchDelay);
+    case "stopwatchStart":
+      stopwatchStart();
       break;
     case "stopwatchEnd":
-      if (interval !== null) clearInterval(interval);
-      interval = null;
-      restTime = stopwatchDelay / 3;
-      console.log(restTime);
-      console.log(stopwatchDelay);
-      stopwatchDelay = 0;
+      stopwatchEnd();
       break;
     case "countdownInit":
       countdownInit(request.value);

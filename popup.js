@@ -20,24 +20,20 @@ var cseconds = document.getElementById("secs");
 var skipBtn = document.getElementById("skipBtn");
 
 // objects
-
 const stopwatch = {
-  delay: 1000,
-  interval: null,
   update: () => {
-    interval = setInterval(() => {
-      chrome.runtime.sendMessage({ msg: "stopwatchTick" }, (time) => {
-        mins.innerHTML = digits(Math.floor(time / 60));
-        seconds.innerHTML = digits(time % 60);
-      });
-    }, this.delay);
+    chrome.runtime.sendMessage({ msg: "stopwatchStart" });
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+      if (request.msg === "stopwatchTick") {
+        mins.innerHTML = digits(Math.floor(request.value / 60));
+        seconds.innerHTML = digits(request.value % 60);
+      }
+    });
   },
   end: () => {
-    if (this.interval !== null) {
-      clearInterval(this.interval);
-      interval = null;
-      chrome.runtime.sendMessage({ msg: "stopwatchEnd" }, (time) => {});
-    }
+    chrome.runtime.sendMessage({ msg: "stopwatchEnd" }, (time) => {});
+    mins.innerHTML = "00";
+    seconds.innerHTML = "00";
   },
 };
 
@@ -84,7 +80,7 @@ function updatePanel() {
       case COUNTDOWN:
         countdownPanel.style.display = "block";
         countdown.update();
-        tickHandler();
+        countdownTickHandler();
         countdownEndHandler();
         break;
     }
@@ -126,7 +122,7 @@ function countdownEndHandler() {
   });
 }
 
-function tickHandler() {
+function countdownTickHandler() {
   chrome.runtime.onMessage.addListener(function (
     request,
     sender,
