@@ -22,27 +22,23 @@ var stopwatchDelay = 30;
 var interval = null;
 var delay = 1000;
 var restTime = 0;
-var is_divert = false;
 
-function stopwatchTick() {
+function stopwatchStart() {
   if (interval === null) {
     interval = setInterval(() => {
       stopwatchDelay++;
+      chrome.runtime.sendMessage({
+        msg: "stopwatchTick",
+        value: stopwatchDelay,
+      });
     }, delay);
   }
-}
-
-function pauseStopwatch() {
-  clearInterval(interval);
-  interval = null;
 }
 
 function stopwatchEnd() {
   if (interval !== null) clearInterval(interval);
   interval = null;
   restTime = stopwatchDelay / 3;
-  console.log(restTime);
-  console.log(stopwatchDelay);
   stopwatchDelay = 0;
 }
 
@@ -74,9 +70,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     case "setState":
       state = request.value;
       break;
-    case "stopwatchTick":
-      stopwatchTick();
-      sendResponse(stopwatchDelay);
+    case "stopwatchStart":
+      stopwatchStart();
       break;
     case "stopwatchEnd":
       stopwatchEnd();
