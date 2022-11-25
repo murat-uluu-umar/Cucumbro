@@ -24,7 +24,7 @@ var skipBtn = document.getElementById("skipBtn");
 const stopwatch = {
   update: () => {
     chrome.runtime.sendMessage({ msg: "stopwatchStart" });
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    chrome.runtime.onMessage.addListener((request) => {
       if (request.msg === "stopwatchTick") {
         mins.innerHTML = digits(Math.floor(request.value / 60));
         seconds.innerHTML = digits(request.value % 60);
@@ -32,11 +32,10 @@ const stopwatch = {
     });
   },
   end: () => {
-    chrome.runtime.sendMessage({ msg: "stopwatchEnd" }, (time) => {});
+    chrome.runtime.sendMessage({ msg: "stopwatchEnd" });
     mins.innerHTML = "00";
     seconds.innerHTML = "00";
   },
-
 };
 
 const countdown = {
@@ -44,10 +43,7 @@ const countdown = {
   interval: null,
   update: () => {
     interval = setInterval(() => {
-      chrome.runtime.sendMessage(
-        { msg: "countdownInit", value: updateDigits },
-        (time) => {}
-      );
+      chrome.runtime.sendMessage({ msg: "countdownInit", value: updateDigits });
     }, this.delay);
   },
   end: () => {
@@ -74,6 +70,7 @@ function updatePanel() {
       case STOPWATCH:
         stopwatchPanel.style.display = "block";
         stopwatch.update();
+        updateDivertBtn();
         restBtn.onclick = () => {
           stopwatch.end();
           changeState(COUNTDOWN);
@@ -87,6 +84,9 @@ function updatePanel() {
         countdown.update();
         countdownTickHandler();
         countdownEndHandler();
+        skipBtn.onclick = () => {
+          chrome.runtime.sendMessage({ msg: "skipCountdown" });
+        };
         break;
     }
   });
@@ -110,34 +110,30 @@ function updateDigits(time) {
 }
 
 async function changeState(state) {
-  await chrome.runtime.sendMessage(
-    { msg: "setState", value: state },
-    (response) => {}
-  );
+  await chrome.runtime.sendMessage({ msg: "setState", value: state });
   updatePanel();
 }
 
 function countdownEndHandler() {
-  chrome.runtime.onMessage.addListener(function (
-    request,
-    sender,
-    sendResponse
-  ) {
+  chrome.runtime.onMessage.addListener(function (request) {
     if (request.msg === "countdownEnd") countdown.end();
   });
 }
 
 function countdownTickHandler() {
-  chrome.runtime.onMessage.addListener(function (
-    request,
-    sender,
-    sendResponse
-  ) {
+  chrome.runtime.onMessage.addListener(function (request) {
     if (request.msg == "tick") updateDigits(request.value);
   });
 }
 
 function divert() {
-  chrome.runtime.sendMessage({ msg: "divert" }, (response) => {});
-  updatePanel();
+  chrome.runtime.sendMessage({ msg: "divert", value: true }, (is_divert) => {
+    divertBtn.innerHTML = is_divert ? "Resume" : "Divert";
+  });
+}
+
+function updateDivertBtn() {
+  chrome.runtime.sendMessage({ msg: "divert", value: false }, (is_divert) => {
+    divertBtn.innerHTML = is_divert ? "Resume" : "Divert";
+  });
 }

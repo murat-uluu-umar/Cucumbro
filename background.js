@@ -2,9 +2,6 @@ const START = "START";
 const STOPWATCH = "STOPWATCH";
 const COUNTDOWN = "COUNTDOWN";
 
-var stopwatch_date = Date();
-var countdown_date = Date();
-
 var state = START;
 
 // notificaton
@@ -18,13 +15,14 @@ function notification() {
 }
 
 // stopwatch
-var stopwatchDelay = 30;
+var stopwatchDelay = 0;
 var interval = null;
 var delay = 1000;
 var restTime = 0;
+var is_divert = false;
 
 function stopwatchStart() {
-  if (interval === null) {
+  if (interval == null) {
     interval = setInterval(() => {
       stopwatchDelay++;
       chrome.runtime.sendMessage({
@@ -35,11 +33,16 @@ function stopwatchStart() {
   }
 }
 
-function stopwatchEnd() {
-  if (interval !== null) clearInterval(interval);
+function stopwatchPause() {
+  if (interval != null) clearInterval(interval);
   interval = null;
+}
+
+function stopwatchEnd() {
+  stopwatchPause();
   restTime = stopwatchDelay / 3;
   stopwatchDelay = 0;
+  is_divert = false;
 }
 
 // countdown
@@ -53,12 +56,16 @@ function countdownInit() {
       var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       var seconds = Math.floor((distance % (1000 * 60)) / 1000);
       result = { minutes: minutes, seconds: seconds };
-      chrome.runtime.sendMessage(
-        { msg: "tick", value: result },
-        (response) => {}
-      );
+      chrome.runtime.sendMessage({ msg: "tick", value: result });
     }
   });
+}
+
+function countdownEnd(sendNotificaton) {
+  restTime = 0;
+  chrome.runtime.sendMessage({ msg: "countdownEnd" });
+  chrome.alarms.clearAll();
+  if (sendNotificaton) notification();
 }
 
 // message handler
@@ -71,7 +78,12 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       state = request.value;
       break;
     case "stopwatchStart":
-      stopwatchStart();
+      if (is_divert)
+        chrome.runtime.sendMessage({
+          msg: "stopwatchTick",
+          value: stopwatchDelay,
+        });
+      else stopwatchStart();
       break;
     case "stopwatchEnd":
       stopwatchEnd();
@@ -80,24 +92,23 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       countdownInit(request.value);
       break;
     case "divert":
-      is_divert = !is_divert;
-      divert();
+      if (request.value) divert();
+      sendResponse(is_divert);
+      break;
+    case "skipCountdown":
+      countdownEnd(false);
       break;
   }
 });
 
 // alarm
-chrome.alarms.onAlarm.addListener((alarm) => {
-  restTime = 0;
-  chrome.runtime.sendMessage({ msg: "countdownEnd" }, (response) => {});
-  chrome.alarms.clearAll();
-  notification();
+chrome.alarms.onAlarm.addListener(() => {
+  countdownEnd(true);
 });
 
 // divert
-function devirt() {
-  if (interval) {
-    if (!is_divert) {
-    }
-  }
+function divert() {
+  is_divert = is_divert ? false : true;
+  if (is_divert) stopwatchPause();
+  else stopwatchStart();
 }
