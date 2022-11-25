@@ -13,6 +13,7 @@ var startBtn = document.getElementById("startBtn");
 var mins = document.getElementById("tens");
 var seconds = document.getElementById("seconds");
 var restBtn = document.getElementById("restBtn");
+var divertBtn = document.getElementById("divertBtn");
 
 // countdown
 var cmins = document.getElementById("mins");
@@ -20,23 +21,20 @@ var cseconds = document.getElementById("secs");
 var skipBtn = document.getElementById("skipBtn");
 
 // objects
-
 const stopwatch = {
-  delay: 1000,
-  interval: null,
   update: () => {
-    interval = setInterval(() => {
-      chrome.runtime.sendMessage({ msg: "stopwatchTick" }, (time) => {
-        mins.innerHTML = digits(Math.floor(time / 60));
-        seconds.innerHTML = digits(time % 60);
-      });
-    }, this.delay);
+    chrome.runtime.sendMessage({ msg: "stopwatchStart" });
+    chrome.runtime.onMessage.addListener((request) => {
+      if (request.msg === "stopwatchTick") {
+        mins.innerHTML = digits(Math.floor(request.value / 60));
+        seconds.innerHTML = digits(request.value % 60);
+      }
+    });
   },
   end: () => {
-    if (this.interval !== null) {
-      clearInterval(this.interval);
-      chrome.runtime.sendMessage({ msg: "stopwatchEnd" }, (time) => {});
-    }
+    chrome.runtime.sendMessage({ msg: "stopwatchEnd" });
+    mins.innerHTML = "00";
+    seconds.innerHTML = "00";
   },
 };
 
@@ -45,15 +43,13 @@ const countdown = {
   interval: null,
   update: () => {
     interval = setInterval(() => {
-      chrome.runtime.sendMessage(
-        { msg: "countdownInit", value: updateDigits },
-        (time) => {}
-      );
+      chrome.runtime.sendMessage({ msg: "countdownInit", value: updateDigits });
     }, this.delay);
   },
   end: () => {
     if (this.interval !== null) {
       clearInterval(this.interval);
+      interval = null;
       changeState(START);
     }
   },
@@ -74,16 +70,23 @@ function updatePanel() {
       case STOPWATCH:
         stopwatchPanel.style.display = "block";
         stopwatch.update();
+        updateDivertBtn();
         restBtn.onclick = () => {
           stopwatch.end();
           changeState(COUNTDOWN);
+        };
+        divertBtn.onclick = () => {
+          divert();
         };
         break;
       case COUNTDOWN:
         countdownPanel.style.display = "block";
         countdown.update();
-        tickHandler()
+        countdownTickHandler();
         countdownEndHandler();
+        skipBtn.onclick = () => {
+          chrome.runtime.sendMessage({ msg: "skipCountdown" });
+        };
         break;
     }
   });
@@ -107,26 +110,30 @@ function updateDigits(time) {
 }
 
 async function changeState(state) {
-  await chrome.runtime.sendMessage(
-    { msg: "setState", value: state },
-    (response) => {}
-  );
+  await chrome.runtime.sendMessage({ msg: "setState", value: state });
   updatePanel();
 }
 
 function countdownEndHandler() {
-  chrome.runtime.onMessage.addListener(function (
-    request,
-    sender,
-    sendResponse
-  ) {
+  chrome.runtime.onMessage.addListener(function (request) {
     if (request.msg === "countdownEnd") countdown.end();
   });
 }
 
-function tickHandler() {
-  chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    if (request.msg == 'tick')
-      updateDigits(request.value)
+function countdownTickHandler() {
+  chrome.runtime.onMessage.addListener(function (request) {
+    if (request.msg == "tick") updateDigits(request.value);
+  });
+}
+
+function divert() {
+  chrome.runtime.sendMessage({ msg: "divert", value: true }, (is_divert) => {
+    divertBtn.innerHTML = is_divert ? "Resume" : "Divert";
+  });
+}
+
+function updateDivertBtn() {
+  chrome.runtime.sendMessage({ msg: "divert", value: false }, (is_divert) => {
+    divertBtn.innerHTML = is_divert ? "Resume" : "Divert";
   });
 }

@@ -14,7 +14,8 @@
     "permissions": [
       "storage",
       "nativeMessaging",
-      "alarms"
+      "alarms",
+      "notifications"
     ],
     "action": {
         "default_popup": "popup.html"
