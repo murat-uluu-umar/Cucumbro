@@ -23,7 +23,6 @@ body {
 .stopwatch {
     width: 64px;
     height: 64px;
-    scale: 1 1;
     text-align: center;
     background-image: url("Resources/Clock sprite sheet.png");
     background-size: 576px 64px;
@@ -35,7 +34,6 @@ body {
 .stopwatch_paused {
     width: 64px;
     height: 64px;
-    scale: 1 1;
     text-align: center;
     background-image: url("Resources/Clock sprite sheet.png");
     background-size: 576px 64px;
@@ -47,11 +45,10 @@ body {
 .countdown {
     width: 64px;
     height: 64px;
-    scale: -1 1;
     text-align: center;
     background-image: url("Resources/Clock sprite sheet.png");
     background-size: 576px 64px;
-    animation: clockTick 1.2s steps(9) infinite;
+    animation: clockTick 0.5s steps(9) infinite;
     display: inline-block;
     vertical-align: middle;
 }
