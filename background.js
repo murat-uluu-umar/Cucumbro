@@ -2,6 +2,11 @@ const START = "START";
 const STOPWATCH = "STOPWATCH";
 const COUNTDOWN = "COUNTDOWN";
 
+const PLAY = ">";
+const PAUSE = "||";
+const REST = "☕";
+const NONE = "";
+
 var state = START;
 
 // notificaton
@@ -31,11 +36,13 @@ function stopwatchStart() {
       });
     }, delay);
   }
+  setBadge(PLAY, [120, 39, 179, 1]);
 }
 
 function stopwatchPause() {
   if (interval != null) clearInterval(interval);
   interval = null;
+  setBadge(PAUSE, [120, 39, 179, 1]);
 }
 
 function stopwatchEnd() {
@@ -51,6 +58,7 @@ function countdownInit() {
   chrome.alarms.get(ALARM, (alarm) => {
     if (!alarm) {
       chrome.alarms.create(ALARM, { delayInMinutes: restTime / 60 });
+      setBadge(REST, [227, 181, 73, 1]);
     } else {
       var distance = alarm.scheduledTime - new Date().getTime();
       var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -65,6 +73,7 @@ function countdownEnd() {
   restTime = 0;
   chrome.runtime.sendMessage({ msg: "countdownEnd" });
   chrome.alarms.clearAll();
+  setBadge(NONE, [227, 181, 73, 1])
   notification();
 }
 
@@ -111,4 +120,9 @@ function divert() {
   is_divert = is_divert ? false : true;
   if (is_divert) stopwatchPause();
   else stopwatchStart();
+}
+
+function setBadge(text, color) {
+  chrome.action.setBadgeText({text: text});
+  chrome.action.setBadgeBackgroundColor({color: color});
 }

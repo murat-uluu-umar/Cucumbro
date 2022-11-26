@@ -1,22 +1,23 @@
 {
-    "name": "Cucumbro!",
-    "version": "1.0",
-    "manifest_version": 3,
-    "icons": {
-        "32": "Resources/Icon/clock.png",
-        "48": "Resources/Icon/clock1.png",
-        "128": "Resources/Icon/clock2.png"
-      },
-    "background": {
-      "service_worker": "background.js"
-    },
-    "permissions": [
-      "storage",
-      "nativeMessaging",
-      "alarms",
-      "notifications"
-    ],
-    "action": {
-        "default_popup": "popup.html"
-    }
-  }
+  "name": "Cucumbro!",
+  "version": "1.0",
+  "manifest_version": 3,
+  "icons": {
+    "32": "Resources/Icon/clock.png",
+    "48": "Resources/Icon/clock1.png",
+    "128": "Resources/Icon/clock2.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "storage",
+    "nativeMessaging",
+    "alarms",
+    "notifications"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "browser_action": {}
+}

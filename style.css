@@ -20,6 +20,29 @@ body {
     color: rgb(255, 255, 255);
 }
 
+.stopwatch_text {
+    color: lightyellow;
+}
+
+.stopwatch_text_paused {
+    color: red;
+    animation: paused_text 2s ease infinite;
+}
+
+@keyframes paused_text {
+    25% {
+        opacity: 1;
+    }
+
+    75% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
 .stopwatch {
     width: 64px;
     height: 64px;
@@ -72,6 +95,9 @@ button {
     text-align: center;
     border-color: rgb(60, 60, 60);
     border-style: outset;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 button:hover {
