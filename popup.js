@@ -14,6 +14,7 @@ var mins = document.getElementById("tens");
 var seconds = document.getElementById("seconds");
 var restBtn = document.getElementById("restBtn");
 var divertBtn = document.getElementById("divertBtn");
+var stopwatchClock = document.getElementById("stopwatch_clock");
 
 // countdown
 var cmins = document.getElementById("mins");
@@ -129,11 +130,13 @@ function countdownTickHandler() {
 function divert() {
   chrome.runtime.sendMessage({ msg: "divert", value: true }, (is_divert) => {
     divertBtn.innerHTML = is_divert ? "Resume" : "Divert";
+    stopwatchClock.className = is_divert ? "stopwatch_paused" : "stopwatch";
   });
 }
 
 function updateDivertBtn() {
   chrome.runtime.sendMessage({ msg: "divert", value: false }, (is_divert) => {
     divertBtn.innerHTML = is_divert ? "Resume" : "Divert";
+    stopwatchClock.className = is_divert ? "stopwatch_paused" : "stopwatch";
   });
 }

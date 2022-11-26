@@ -7,8 +7,8 @@ var state = START;
 // notificaton
 function notification() {
   chrome.notifications.create("countdownEnd", {
-    iconUrl: "Resources/Icon/pixil-frame-0 (3).png",
-    title: "⏰ Cucumbro!",
+    iconUrl: "Resources/Icon/clock2.png",
+    title: "Cucumbro!",
     message: "Return to your job",
     type: "basic",
   });
@@ -61,11 +61,11 @@ function countdownInit() {
   });
 }
 
-function countdownEnd(sendNotificaton) {
+function countdownEnd() {
   restTime = 0;
   chrome.runtime.sendMessage({ msg: "countdownEnd" });
   chrome.alarms.clearAll();
-  if (sendNotificaton) notification();
+  notification();
 }
 
 // message handler
@@ -96,14 +96,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       sendResponse(is_divert);
       break;
     case "skipCountdown":
-      countdownEnd(false);
+      countdownEnd();
       break;
   }
 });
 
 // alarm
 chrome.alarms.onAlarm.addListener(() => {
-  countdownEnd(true);
+  countdownEnd();
 });
 
 // divert
