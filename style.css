@@ -5,7 +5,7 @@ body {
     border: thick;
     border-style: groove;
     border-color: #842e87;
-    font-family: 'Common Pixel', sans-serif;
+    font-family: 'pixel_font', sans-serif;
     font-size: larger;
     text-decoration: solid;
     text-align: center;
@@ -90,7 +90,7 @@ button {
     background: linear-gradient(180deg, rgba(223, 223, 223, 0.2923265925624914) 0%, rgba(255, 255, 255, 0.935) 30%, rgba(74, 74, 74, 0.0028529083519651666) 39%, rgba(45, 45, 45, 0.5730283469484563) 100%), rgb(236, 211, 20);
     color: black;
     border: medium;
-    font-family: 'Common Pixel', sans-serif;
+    font-family: 'pixel_font';
     text-decoration: solid;
     text-align: center;
     border-color: rgb(60, 60, 60);
