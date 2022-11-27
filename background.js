@@ -2,19 +2,28 @@ const START = "START";
 const STOPWATCH = "STOPWATCH";
 const COUNTDOWN = "COUNTDOWN";
 
-const PLAY = ">";
+const PLAY = "⏰";
 const PAUSE = "||";
 const REST = "☕";
 const NONE = "";
 
 var state = START;
 
+var words = [
+  "Do your best!",
+  "Easy come, easy go",
+  "Just do it!",
+  "Okay! Let's go!",
+  "No time to die!",
+  "We're leaving at dawn...",
+];
+
 // notificaton
 function notification() {
   chrome.notifications.create("countdownEnd", {
     iconUrl: "Resources/Icon/clock2.png",
-    title: "Cucumbro!",
-    message: "Return to your job",
+    title: "Warptimer",
+    message: words[Math.floor(Math.random() * words.length)],
     type: "basic",
   });
 }
@@ -73,8 +82,9 @@ function countdownEnd() {
   restTime = 0;
   chrome.runtime.sendMessage({ msg: "countdownEnd" });
   chrome.alarms.clearAll();
-  setBadge(NONE, [227, 181, 73, 1])
+  setBadge(NONE, [227, 181, 73, 1]);
   notification();
+  chrome.windows.create({url: "popup.html", type: "panel"});
 }
 
 // message handler
@@ -122,7 +132,18 @@ function divert() {
   else stopwatchStart();
 }
 
+//badge
 function setBadge(text, color) {
-  chrome.action.setBadgeText({text: text});
-  chrome.action.setBadgeBackgroundColor({color: color});
+  chrome.action.setBadgeText({ text: text });
+  chrome.action.setBadgeBackgroundColor({ color: color });
+}
+
+function sound() {
+  console.log(chrome.runtime.getURL("Resources/Sounds/3.mp3"));
+  var url = "Resources/Sounds/3.mp3";
+  var audio =
+    new Audio(url) || false;
+  if (audio) {
+    audio.play();
+  }
 }

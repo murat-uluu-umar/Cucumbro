@@ -1,23 +1,22 @@
 {
-  "name": "Cucumbro!",
+  "name": "Warptimer",
+  "description": "This extension will improve your efficiency. It based on time management technique - \"flowtime\".",
   "version": "1.0",
   "manifest_version": 3,
   "icons": {
-    "32": "Resources/Icon/clock.png",
-    "48": "Resources/Icon/clock1.png",
+    "16": "Resources/Icon/clock.png",
+    "32": "Resources/Icon/clock1.png",
     "128": "Resources/Icon/clock2.png"
   },
   "background": {
     "service_worker": "background.js"
   },
   "permissions": [
-    "storage",
     "nativeMessaging",
     "alarms",
     "notifications"
   ],
   "action": {
     "default_popup": "popup.html"
-  },
-  "browser_action": {}
+  }
 }
