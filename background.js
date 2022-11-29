@@ -8,23 +8,19 @@ const REST = "☕";
 const NONE = "";
 
 var state = START;
-
-var words = [
-  "Do your best!",
-  "Easy come, easy go",
-  "Just do it!",
-  "Okay! Let's go!",
-  "No time to die!",
-  "We're leaving at dawn...",
-];
+chrome.storage.sync.get(["state"]).then((result) => {
+  if (result.state != undefined) state = result.state;
+  else state = START;
+});
 
 // notificaton
-function notification() {
-  chrome.notifications.create("countdownEnd", {
-    iconUrl: "Resources/Icon/clock2.png",
-    title: "Warptimer",
-    message: words[Math.floor(Math.random() * words.length)],
-    type: "basic",
+function popup() {
+  chrome.windows.create({
+    url: "Views/congratulations.html",
+    type: "popup",
+    width: 400,
+    height: 250,
+    focused: true,
   });
 }
 
@@ -62,12 +58,15 @@ function stopwatchEnd() {
 }
 
 // countdown
+var ringed = false;
 const ALARM = "countdown";
 function countdownInit() {
   chrome.alarms.get(ALARM, (alarm) => {
-    if (!alarm) {
-      chrome.alarms.create(ALARM, { delayInMinutes: restTime / 60 });
-      setBadge(REST, [227, 181, 73, 1]);
+    if (alarm == undefined) {
+      if (ringed == false) {
+        chrome.alarms.create(ALARM, { delayInMinutes: restTime / 60 });
+        setBadge(REST, [227, 181, 73, 1]);
+      }
     } else {
       var distance = alarm.scheduledTime - new Date().getTime();
       var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -80,11 +79,11 @@ function countdownInit() {
 
 function countdownEnd() {
   restTime = 0;
+  state = START;
   chrome.runtime.sendMessage({ msg: "countdownEnd" });
   chrome.alarms.clearAll();
   setBadge(NONE, [227, 181, 73, 1]);
-  notification();
-  chrome.windows.create({url: "popup.html", type: "panel"});
+  popup();
 }
 
 // message handler
@@ -95,8 +94,10 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       break;
     case "setState":
       state = request.value;
+      chrome.storage.sync.set({ state: state });
       break;
     case "stopwatchStart":
+      ringed = false;
       if (is_divert)
         chrome.runtime.sendMessage({
           msg: "stopwatchTick",
@@ -123,6 +124,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 // alarm
 chrome.alarms.onAlarm.addListener(() => {
   countdownEnd();
+  ringed = true;
 });
 
 // divert
@@ -136,14 +138,4 @@ function divert() {
 function setBadge(text, color) {
   chrome.action.setBadgeText({ text: text });
   chrome.action.setBadgeBackgroundColor({ color: color });
-}
-
-function sound() {
-  console.log(chrome.runtime.getURL("Resources/Sounds/3.mp3"));
-  var url = "Resources/Sounds/3.mp3";
-  var audio =
-    new Audio(url) || false;
-  if (audio) {
-    audio.play();
-  }
 }

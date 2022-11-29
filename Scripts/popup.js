@@ -1,3 +1,5 @@
+//import * as dexie from chrome.runtime.getURL("../Scripts/DexieJs/dexie");
+
 const START = "START";
 const STOPWATCH = "STOPWATCH";
 const COUNTDOWN = "COUNTDOWN";
@@ -66,6 +68,17 @@ function updatePanel() {
     hideAll();
     switch (response) {
       case START:
+        // var db = new dexie.Dexie("Test");
+        // db.version(1).stores({ food: "name, callorie" });
+        // db.food
+        //   .bulkPut([
+        //     { name: "bana", callorie: 342 },
+        //     { name: "salad", callorie: 242 },
+        //   ])
+        //   .then(() => {
+        //     console.log(db.food.toArray());
+        //   });
+        countdown.end();
         startPanel.style.display = "block";
         startBtn.onclick = () => changeState(STOPWATCH);
         break;
@@ -118,7 +131,7 @@ async function changeState(state) {
 
 function countdownEndHandler() {
   chrome.runtime.onMessage.addListener(function (request) {
-    if (request.msg === "countdownEnd") countdown.end();
+    if (request.msg === "countdownEnd") updatePanel();
   });
 }
 
@@ -132,7 +145,9 @@ function divert() {
   chrome.runtime.sendMessage({ msg: "divert", value: true }, (is_divert) => {
     divertBtn.innerHTML = is_divert ? "Resume" : "Divert";
     stopwatchClock.className = is_divert ? "stopwatch_paused" : "stopwatch";
-    stopwatchText.className = is_divert ? "stopwatch_text_paused" : "stopwatch_text";
+    stopwatchText.className = is_divert
+      ? "stopwatch_text_paused"
+      : "stopwatch_text";
   });
 }
 
@@ -140,6 +155,8 @@ function updateDivertBtn() {
   chrome.runtime.sendMessage({ msg: "divert", value: false }, (is_divert) => {
     divertBtn.innerHTML = is_divert ? "Resume" : "Divert";
     stopwatchClock.className = is_divert ? "stopwatch_paused" : "stopwatch";
-    stopwatchText.className = is_divert ? "stopwatch_text_paused" : "stopwatch_text";
+    stopwatchText.className = is_divert
+      ? "stopwatch_text_paused"
+      : "stopwatch_text";
   });
 }

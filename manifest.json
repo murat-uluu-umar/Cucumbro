@@ -14,9 +14,20 @@
   "permissions": [
     "nativeMessaging",
     "alarms",
-    "notifications"
+    "notifications",
+    "storage"
   ],
   "action": {
-    "default_popup": "popup.html"
-  }
+    "default_popup": "Views/popup.html"
+  },
+  "web_accessible_resources": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "resources": [
+        "Scripts/DexieJs/dexie.js"
+      ]
+    }
+  ]
 }

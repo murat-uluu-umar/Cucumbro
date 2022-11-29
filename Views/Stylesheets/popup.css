@@ -1,5 +1,9 @@
+:root {
+    --placeholder_color: red;
+}
+
 body {
-    background-image: url("Resources/bricks.png");
+    background-image: url("../../Resources/bricks.png");
     background-size: 50px;
     background-repeat: repeat;
     border: thick;
@@ -47,7 +51,7 @@ body {
     width: 64px;
     height: 64px;
     text-align: center;
-    background-image: url("Resources/Clock sprite sheet.png");
+    background-image: url("../../Resources/Clock sprite sheet.png");
     background-size: 576px 64px;
     animation: clockTick 1s steps(9) infinite;
     display: inline-block;
@@ -58,7 +62,7 @@ body {
     width: 64px;
     height: 64px;
     text-align: center;
-    background-image: url("Resources/Clock sprite sheet.png");
+    background-image: url("../../Resources/Clock sprite sheet.png");
     background-size: 576px 64px;
     animation: clockTick 0s steps(9) infinite;
     display: inline-block;
@@ -69,7 +73,7 @@ body {
     width: 64px;
     height: 64px;
     text-align: center;
-    background-image: url("Resources/Clock sprite sheet.png");
+    background-image: url("../../Resources/Clock sprite sheet.png");
     background-size: 576px 64px;
     animation: clockTick 0.5s steps(9) infinite;
     display: inline-block;
@@ -80,7 +84,6 @@ body {
     from {
         background-position-x: 0px;
     }
-
     to {
         background-position-x: 576px;
     }
@@ -107,3 +110,27 @@ button:hover {
     border-color: rgb(60, 60, 60);
     border-style: outset;
 }
+
+input {
+    background-color: rgb(172, 13, 172);
+    font-family: 'pixel_font';
+    width: 60%;
+    font-size: small;
+    color: antiquewhite;
+    padding: 2px;
+    margin-bottom: 5%;
+}
+
+::placeholder {
+    color: var(--placeholder_color);
+    opacity: 1;
+}
+
+:-ms-input-placeholder {
+    color: var(--placeholder_color);
+}
+
+::-ms-input-placeholder {
+    color: var(--placeholder_color);
+}
+
