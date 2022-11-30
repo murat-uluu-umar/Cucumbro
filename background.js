@@ -10,7 +10,10 @@ const NONE = "";
 var state = START;
 chrome.storage.sync.get(["state"]).then((result) => {
   if (result.state != undefined) state = result.state;
-  else state = START;
+  else {
+    state = START;
+    chrome.storage.sync.set({ state: START });
+  }
 });
 
 // notificaton
@@ -80,6 +83,7 @@ function countdownInit() {
 function countdownEnd() {
   restTime = 0;
   state = START;
+  chrome.storage.sync.set({ state: START });
   chrome.runtime.sendMessage({ msg: "countdownEnd" });
   chrome.alarms.clearAll();
   setBadge(NONE, [227, 181, 73, 1]);
