@@ -7,6 +7,8 @@ const PAUSE = "||";
 const REST = "☕";
 const NONE = "";
 
+const PAUSEWIN = "PAUSEWIN";
+
 var state = START;
 chrome.storage.sync.get(["state"]).then((result) => {
   if (result.state != undefined) state = result.state;
@@ -35,6 +37,7 @@ var restTime = 0;
 var is_divert = false;
 
 function stopwatchStart() {
+  chrome.notifications.clear(PAUSEWIN)
   if (interval == null) {
     interval = setInterval(() => {
       stopwatchDelay++;
@@ -55,6 +58,7 @@ function stopwatchPause() {
 
 function stopwatchEnd() {
   stopwatchPause();
+  chrome.notifications.clear(PAUSEWIN)
   restTime = stopwatchDelay / 3;
   stopwatchDelay = 0;
   is_divert = false;
@@ -134,9 +138,24 @@ chrome.alarms.onAlarm.addListener(() => {
 // divert
 function divert() {
   is_divert = is_divert ? false : true;
-  if (is_divert) stopwatchPause();
+  if (is_divert) stopwatchPause(), pauseWindow();
   else stopwatchStart();
 }
+
+function pauseWindow() {
+  chrome.notifications.create(PAUSEWIN, {
+    iconUrl: "Resources/Icon/clock.png",
+    title: "Warptimer",
+    type: "basic",
+    message: "Warptimer paused!",
+    priority: 2,
+    requireInteraction: true,
+  });
+}
+
+chrome.notifications.onClosed.addListener((id, byUser) => {
+  if ( id === PAUSEWIN && byUser) pauseWindow();
+});
 
 //badge
 function setBadge(text, color) {

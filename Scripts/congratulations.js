@@ -11,7 +11,6 @@ window.onload = () => {
   window.moveTo(screen.width / 2 - 350 / 2, screen.height / 2 - 250 / 2);
   sound()
 };
-
 function sound() {
   var url = chrome.runtime.getURL("../Resources/Sounds/3.mp3");
   var audio = new Audio(url) || false;
