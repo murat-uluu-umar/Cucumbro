@@ -143,7 +143,7 @@ function countdownTickHandler() {
 
 function divert() {
   chrome.runtime.sendMessage({ msg: "divert", value: true }, (is_divert) => {
-    divertBtn.innerHTML = is_divert ? "Resume" : "Divert";
+    divertBtn.innerHTML = is_divert ? '<i class="fas fa-play fa-xs"></i> Resume' : '<i class="fas fa-pause fa-xs"></i> Divert';
     stopwatchClock.className = is_divert ? "stopwatch_paused" : "stopwatch";
     stopwatchText.className = is_divert
       ? "stopwatch_text_paused"
@@ -153,7 +153,7 @@ function divert() {
 
 function updateDivertBtn() {
   chrome.runtime.sendMessage({ msg: "divert", value: false }, (is_divert) => {
-    divertBtn.innerHTML = is_divert ? "Resume" : "Divert";
+    divertBtn.innerHTML = is_divert ? '<i class="fas fa-play fa-xs"></i> Resume' : '<i class="fas fa-pause fa-xs"></i> Divert';
     stopwatchClock.className = is_divert ? "stopwatch_paused" : "stopwatch";
     stopwatchText.className = is_divert
       ? "stopwatch_text_paused"

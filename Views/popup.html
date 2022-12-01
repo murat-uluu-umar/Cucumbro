@@ -6,6 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="Stylesheets/popup.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
   <style>
     @font-face {
       font-family: pixel_font;
@@ -25,7 +26,7 @@
       </datalist>
     </div>
     <div>
-      <button id="startBtn">Start</button>
+      <button id="startBtn"><i class="fas fa-play fa-xs"></i> Start</button>
     </div>
   </div>
   <div class="container" id="stopwatch">
@@ -34,15 +35,15 @@
     <div class="stopwatch_text" id="stopwatch_text"><span id="tens">00</span>:<span id="seconds">00</span></div>
     </p>
     <div>
-      <button id="divertBtn">Divert</button>
-      <button id="restBtn">Rest</button>
+      <button id="divertBtn"><i class="fas fa-pause"></i>Divert</button>
+      <button id="restBtn"><i class="fas fa-stop"></i> Rest</button>
     </div>
   </div>
   <div class="container" id="countdown">
     <p>
     <div class="countdown"></div> <span id="mins">00</span>:<span id="secs">00</span></p>
     <div>
-      <button id="skipBtn">Skip</button>
+      <button id="skipBtn"><i class="fas fa-forward fa-xs"></i> Skip</button>
     </div>
   </div>
   <script src="../Scripts/popup.js"></script>

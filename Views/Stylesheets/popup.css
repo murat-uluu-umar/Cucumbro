@@ -20,7 +20,7 @@ body {
 .container {
     padding: 3vh 3vh 3vh 3vh;
     flex-direction: column;
-    width: 150px;
+    width: 200px;
     color: rgb(255, 255, 255);
 }
 
