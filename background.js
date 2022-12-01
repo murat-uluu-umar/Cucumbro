@@ -30,38 +30,38 @@ function popup() {
 }
 
 // stopwatch
-var stopwatchDelay = 0;
-var interval = null;
-var delay = 1000;
 var restTime = 0;
 var is_divert = false;
 
 function stopwatchStart() {
-  chrome.notifications.clear(PAUSEWIN)
-  if (interval == null) {
-    interval = setInterval(() => {
-      stopwatchDelay++;
-      chrome.runtime.sendMessage({
-        msg: "stopwatchTick",
-        value: stopwatchDelay,
-      });
-    }, delay);
-  }
+  chrome.storage.sync.get(["scheduledTime"]).then((result) => {
+    if (result.scheduledTime === undefined)
+      chrome.storage.sync.set({ scheduledTime: new Date().getTime() });
+  });
+  chrome.notifications.clear(PAUSEWIN);
   setBadge(PLAY, [120, 39, 179, 1]);
 }
 
 function stopwatchPause() {
-  if (interval != null) clearInterval(interval);
-  interval = null;
+  chrome.storage.sync.get(["divertStartTime"]).then((result) => {
+    if (result.divertStartTime === undefined)
+      chrome.storage.sync.set({ divetStartTime: new Date().getTime() });
+  });
   setBadge(PAUSE, [120, 39, 179, 1]);
 }
 
 function stopwatchEnd() {
   stopwatchPause();
-  chrome.notifications.clear(PAUSEWIN)
-  restTime = stopwatchDelay / 3;
-  stopwatchDelay = 0;
-  is_divert = false;
+  chrome.storage.sync
+    .get(["divertSummTime", "scheduledTime"])
+    .then((result) => {
+      distance = result.scheduledTime - result.divertSummTime;
+      restTime = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      chrome.storage.sync.set({ scheduledTime: undefined });
+      chrome.storage.sync.set({ divertSummTime: undefined });
+      chrome.notifications.clear(PAUSEWIN);
+      is_divert = false;
+    });
 }
 
 // countdown
@@ -71,7 +71,7 @@ function countdownInit() {
   chrome.alarms.get(ALARM, (alarm) => {
     if (alarm == undefined) {
       if (ringed == false) {
-        chrome.alarms.create(ALARM, { delayInMinutes: restTime / 60 });
+        chrome.alarms.create(ALARM, { delayInMinutes: restTime });
         setBadge(REST, [227, 181, 73, 1]);
       }
     } else {
@@ -140,6 +140,24 @@ function divert() {
   is_divert = is_divert ? false : true;
   if (is_divert) stopwatchPause(), pauseWindow();
   else stopwatchStart();
+  if (is_divert == false) {
+    chrome.storage.sync.get(["divertStartTime"]).then((result) => {
+      if (result.divertStartTime !== undefined) {
+        var divertEndTime = new Date(
+          new Date().getTime() - result.divertStartTime
+        );
+        chrome.storage.sync.get(["divertSummTime"]).then((result) => {
+          if (result.divertSummTime === undefined)
+            chrome.storage.sync.set({ divertSummTime: divertEndTime });
+          else
+            chrome.storage.sync.set({
+              divertSummTime: new Date(result.divertSummTime + divertEndTime),
+            });
+        });
+        chrome.storage.sync.set({ divertStartTime: undefined });
+      }
+    });
+  }
 }
 
 function pauseWindow() {
@@ -154,7 +172,7 @@ function pauseWindow() {
 }
 
 chrome.notifications.onClosed.addListener((id, byUser) => {
-  if ( id === PAUSEWIN && byUser) pauseWindow();
+  if (id === PAUSEWIN && byUser) pauseWindow();
 });
 
 //badge
