@@ -18,6 +18,7 @@ var restBtn = document.getElementById("restBtn");
 var divertBtn = document.getElementById("divertBtn");
 var stopwatchClock = document.getElementById("stopwatch_clock");
 var stopwatchText = document.getElementById("stopwatch_text");
+var is_divert = false;
 
 // countdown
 var cmins = document.getElementById("mins");
@@ -26,29 +27,71 @@ var skipBtn = document.getElementById("skipBtn");
 
 // objects
 const stopwatch = {
+  interval: null,
   update: () => {
-    chrome.runtime.sendMessage({ msg: "stopwatchStart" });
-    chrome.runtime.onMessage.addListener((request) => {
-      if (request.msg === "stopwatchTick") {
-        mins.innerHTML = digits(Math.floor(request.value / 60));
-        seconds.innerHTML = digits(request.value % 60);
-      }
-    });
+    if (stopwatch.interval == null)
+      stopwatch.interval = setInterval(() => {
+        chrome.storage.sync
+          .get(["scheduledTime", "divertSummTime"])
+          .then((result) => {
+            if (result.scheduledTime !== undefined) {
+              var distance = stopwatch.getDistance(
+                result.scheduledTime,
+                result.divertSummTime
+              );
+              var minutesMills = Math.floor(
+                (distance % (1000 * 60 * 60)) / (1000 * 60)
+              );
+              var secondsMills = Math.floor((distance % (1000 * 60)) / 1000);
+              mins.innerHTML = digits(minutesMills);
+              seconds.innerHTML = digits(secondsMills);
+              console.log("stopwatch");
+            }
+          });
+      }, 1000);
   },
   end: () => {
+    stopwatch.stop();
     chrome.runtime.sendMessage({ msg: "stopwatchEnd" });
     mins.innerHTML = "00";
     seconds.innerHTML = "00";
   },
+  stop() {
+    if (stopwatch.interval !== null) {
+      clearInterval(stopwatch.interval);
+      stopwatch.interval = null;
+    }
+  },
+  getDistance(scheduledTime, divertSummTime) {
+    var distance =
+      Date.now() -
+      (typeof divertSummTime === "number" ? divertSummTime : 0) -
+      scheduledTime;
+    return distance;
+  },
+  saveDigitsText() {
+    chrome.storage.sync.set({
+      stopwatchDigitsText: [mins.innerHTML, seconds.innerHTML],
+    });
+  },
+  loadDigitsText() {
+    chrome.storage.sync.get(["stopwatchDigitsText"]).then((result) => {
+      mins.innerHTML = result.stopwatchDigitsText[0];
+      seconds.innerHTML = result.stopwatchDigitsText[1];
+    });
+  },
 };
 
 const countdown = {
-  delay: 3000,
+  delay: 1000,
   interval: null,
   update: () => {
     interval = setInterval(() => {
-      chrome.runtime.sendMessage({ msg: "countdownInit", value: updateDigits });
-    }, this.delay);
+      chrome.runtime.sendMessage({
+        msg: "countdownInit",
+      });
+      console.log("countdown");
+    }, countdown.delay);
   },
   end: () => {
     if (this.interval !== null) {
@@ -62,6 +105,11 @@ const countdown = {
 window.onload = () => {
   updatePanel();
 };
+
+window.onblur = () => {
+  stopwatch.saveDigitsText();
+  console.log('hello');
+}
 
 function updatePanel() {
   chrome.runtime.sendMessage({ msg: "getState" }, (response) => {
@@ -80,19 +128,22 @@ function updatePanel() {
         //   });
         countdown.end();
         startPanel.style.display = "block";
-        startBtn.onclick = () => changeState(STOPWATCH);
+        startBtn.onclick = () => {
+          changeState(STOPWATCH);
+          chrome.runtime.sendMessage({ msg: "stopwatchStart" }, () => {
+            stopwatch.update();
+          });
+        };
         break;
       case STOPWATCH:
         stopwatchPanel.style.display = "block";
-        stopwatch.update();
+        stopwatch.loadDigitsText();
         updateDivertBtn();
         restBtn.onclick = () => {
           stopwatch.end();
           changeState(COUNTDOWN);
         };
-        divertBtn.onclick = () => {
-          divert();
-        };
+        divertBtn.onclick = () => divert();
         break;
       case COUNTDOWN:
         countdownPanel.style.display = "block";
@@ -143,7 +194,11 @@ function countdownTickHandler() {
 
 function divert() {
   chrome.runtime.sendMessage({ msg: "divert", value: true }, (is_divert) => {
-    divertBtn.innerHTML = is_divert ? '<i class="fas fa-play fa-xs"></i> Resume' : '<i class="fas fa-pause fa-xs"></i> Divert';
+    if (is_divert && stopwatch.interval !== null) stopwatch.stop();
+    else if (!is_divert) stopwatch.update();
+    divertBtn.innerHTML = is_divert
+      ? '<i class="fas fa-play fa-xs"></i> Resume'
+      : '<i class="fas fa-pause fa-xs"></i> Divert';
     stopwatchClock.className = is_divert ? "stopwatch_paused" : "stopwatch";
     stopwatchText.className = is_divert
       ? "stopwatch_text_paused"
@@ -153,7 +208,10 @@ function divert() {
 
 function updateDivertBtn() {
   chrome.runtime.sendMessage({ msg: "divert", value: false }, (is_divert) => {
-    divertBtn.innerHTML = is_divert ? '<i class="fas fa-play fa-xs"></i> Resume' : '<i class="fas fa-pause fa-xs"></i> Divert';
+    if (!is_divert) stopwatch.update();
+    divertBtn.innerHTML = is_divert
+      ? '<i class="fas fa-play fa-xs"></i> Resume'
+      : '<i class="fas fa-pause fa-xs"></i> Divert';
     stopwatchClock.className = is_divert ? "stopwatch_paused" : "stopwatch";
     stopwatchText.className = is_divert
       ? "stopwatch_text_paused"

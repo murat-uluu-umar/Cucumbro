@@ -19,15 +19,5 @@
   ],
   "action": {
     "default_popup": "Views/popup.html"
-  },
-  "web_accessible_resources": [
-    {
-      "matches": [
-        "<all_urls>"
-      ],
-      "resources": [
-        "Scripts/DexieJs/dexie.js"
-      ]
-    }
-  ]
+  }
 }

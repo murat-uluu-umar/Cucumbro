@@ -34,34 +34,25 @@ var restTime = 0;
 var is_divert = false;
 
 function stopwatchStart() {
-  chrome.storage.sync.get(["scheduledTime"]).then((result) => {
-    if (result.scheduledTime === undefined)
-      chrome.storage.sync.set({ scheduledTime: new Date().getTime() });
+  chrome.storage.sync.set({
+    divertSummTime: 0,
+    scheduledTime: Date.now(),
   });
   chrome.notifications.clear(PAUSEWIN);
   setBadge(PLAY, [120, 39, 179, 1]);
 }
 
-function stopwatchPause() {
-  chrome.storage.sync.get(["divertStartTime"]).then((result) => {
-    if (result.divertStartTime === undefined)
-      chrome.storage.sync.set({ divetStartTime: new Date().getTime() });
-  });
-  setBadge(PAUSE, [120, 39, 179, 1]);
+function stopwatchEnd() {
+  chrome.notifications.clear(PAUSEWIN);
+  is_divert = false;
 }
 
-function stopwatchEnd() {
-  stopwatchPause();
-  chrome.storage.sync
-    .get(["divertSummTime", "scheduledTime"])
-    .then((result) => {
-      distance = result.scheduledTime - result.divertSummTime;
-      restTime = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      chrome.storage.sync.set({ scheduledTime: undefined });
-      chrome.storage.sync.set({ divertSummTime: undefined });
-      chrome.notifications.clear(PAUSEWIN);
-      is_divert = false;
-    });
+function getDistance(scheduledTime, divertSummTime) {
+  var distance =
+    Date.now() -
+    (typeof divertSummTime === "number" ? divertSummTime : 0) -
+    scheduledTime;
+  return distance;
 }
 
 // countdown
@@ -69,13 +60,8 @@ var ringed = false;
 const ALARM = "countdown";
 function countdownInit() {
   chrome.alarms.get(ALARM, (alarm) => {
-    if (alarm == undefined) {
-      if (ringed == false) {
-        chrome.alarms.create(ALARM, { delayInMinutes: restTime });
-        setBadge(REST, [227, 181, 73, 1]);
-      }
-    } else {
-      var distance = alarm.scheduledTime - new Date().getTime();
+    if (alarm !== undefined) {
+      var distance = alarm.scheduledTime - Date.now();
       var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       var seconds = Math.floor((distance % (1000 * 60)) / 1000);
       result = { minutes: minutes, seconds: seconds };
@@ -106,18 +92,30 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       break;
     case "stopwatchStart":
       ringed = false;
-      if (is_divert)
-        chrome.runtime.sendMessage({
-          msg: "stopwatchTick",
-          value: stopwatchDelay,
-        });
-      else stopwatchStart();
+      stopwatchStart();
       break;
     case "stopwatchEnd":
       stopwatchEnd();
+      chrome.storage.sync
+        .get(["divertSummTime", "scheduledTime"])
+        .then((result) => {
+          var distance = getDistance(
+            result.scheduledTime,
+            result.divertSummTime
+          );
+          restTime = (distance % (1000 * 60)) / 1000 / 3;
+          chrome.alarms.get(ALARM, (alarm) => {
+            if (alarm == undefined) {
+              if (ringed == false) {
+                chrome.alarms.create(ALARM, { delayInMinutes: restTime / 60 });
+                setBadge(REST, [227, 181, 73, 1]);
+              }
+            }
+          });
+        });
       break;
     case "countdownInit":
-      countdownInit(request.value);
+      countdownInit();
       break;
     case "divert":
       if (request.value) divert();
@@ -138,26 +136,20 @@ chrome.alarms.onAlarm.addListener(() => {
 // divert
 function divert() {
   is_divert = is_divert ? false : true;
-  if (is_divert) stopwatchPause(), pauseWindow();
-  else stopwatchStart();
-  if (is_divert == false) {
-    chrome.storage.sync.get(["divertStartTime"]).then((result) => {
-      if (result.divertStartTime !== undefined) {
-        var divertEndTime = new Date(
-          new Date().getTime() - result.divertStartTime
-        );
-        chrome.storage.sync.get(["divertSummTime"]).then((result) => {
-          if (result.divertSummTime === undefined)
-            chrome.storage.sync.set({ divertSummTime: divertEndTime });
-          else
-            chrome.storage.sync.set({
-              divertSummTime: new Date(result.divertSummTime + divertEndTime),
-            });
+  chrome.storage.sync
+    .get(["divertStartTime", "divertSummTime"])
+    .then((result) => {
+      if (is_divert) {
+        chrome.storage.sync.set({ divertStartTime: Date.now() });
+        setBadge(PAUSE, [120, 39, 179, 1]);
+      } else {
+        setBadge(PLAY, [120, 39, 179, 1]);
+        var divertEndTime = Date.now() - result.divertStartTime;
+        chrome.storage.sync.set({
+          divertSummTime: result.divertSummTime + divertEndTime,
         });
-        chrome.storage.sync.set({ divertStartTime: undefined });
       }
     });
-  }
 }
 
 function pauseWindow() {
