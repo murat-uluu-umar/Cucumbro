@@ -11,8 +11,10 @@ const PAUSEWIN = "PAUSEWIN";
 
 var state = START;
 chrome.storage.sync.get(["state"]).then((result) => {
-  if (result.state != undefined) state = result.state;
-  else {
+  console.log(result.state);
+  if (result.state != undefined) {
+    state = result.state;
+  } else {
     state = START;
     chrome.storage.sync.set({ state: START });
   }
@@ -31,12 +33,14 @@ function popup() {
 
 // stopwatch
 var restTime = 0;
-var is_divert = false;
 
 function stopwatchStart() {
   chrome.storage.sync.set({
     divertSummTime: 0,
     scheduledTime: Date.now(),
+    divert: false,
+    divertStartTime: 0,
+    divertSummTime: 0,
   });
   chrome.notifications.clear(PAUSEWIN);
   setBadge(PLAY, [120, 39, 179, 1]);
@@ -44,7 +48,7 @@ function stopwatchStart() {
 
 function stopwatchEnd() {
   chrome.notifications.clear(PAUSEWIN);
-  is_divert = false;
+  chrome.storage.sync.set({ divert: false });
 }
 
 function getDistance(scheduledTime, divertSummTime) {
@@ -64,7 +68,7 @@ function countdownInit() {
       var distance = alarm.scheduledTime - Date.now();
       var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-      result = { minutes: minutes, seconds: seconds };
+      var result = { minutes: minutes, seconds: seconds };
       chrome.runtime.sendMessage({ msg: "tick", value: result });
     }
   });
@@ -83,9 +87,6 @@ function countdownEnd() {
 // message handler
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   switch (request.msg) {
-    case "getState":
-      sendResponse(state);
-      break;
     case "setState":
       state = request.value;
       chrome.storage.sync.set({ state: state });
@@ -119,7 +120,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       break;
     case "divert":
       if (request.value) divert();
-      sendResponse(is_divert);
       break;
     case "skipCountdown":
       countdownEnd();
@@ -135,10 +135,12 @@ chrome.alarms.onAlarm.addListener(() => {
 
 // divert
 function divert() {
-  is_divert = is_divert ? false : true;
   chrome.storage.sync
-    .get(["divertStartTime", "divertSummTime"])
+    .get(["divertStartTime", "divertSummTime", "divert"])
     .then((result) => {
+      var is_divert = result.divert ? false : true;
+      console.log(new Date(result.divertStartTime).toTimeString());
+      console.log(new Date(result.divertSummTime).toTimeString());
       if (is_divert) {
         chrome.storage.sync.set({ divertStartTime: Date.now() });
         setBadge(PAUSE, [120, 39, 179, 1]);
@@ -149,6 +151,8 @@ function divert() {
           divertSummTime: result.divertSummTime + divertEndTime,
         });
       }
+      chrome.storage.sync.set({ divert: is_divert });
+      chrome.runtime.sendMessage({ msg: "divertSwitched", value: is_divert });
     });
 }
 

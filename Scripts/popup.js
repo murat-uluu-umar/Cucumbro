@@ -1,5 +1,3 @@
-//import * as dexie from chrome.runtime.getURL("../Scripts/DexieJs/dexie");
-
 const START = "START";
 const STOPWATCH = "STOPWATCH";
 const COUNTDOWN = "COUNTDOWN";
@@ -18,7 +16,6 @@ var restBtn = document.getElementById("restBtn");
 var divertBtn = document.getElementById("divertBtn");
 var stopwatchClock = document.getElementById("stopwatch_clock");
 var stopwatchText = document.getElementById("stopwatch_text");
-var is_divert = false;
 
 // countdown
 var cmins = document.getElementById("mins");
@@ -45,7 +42,6 @@ const stopwatch = {
               var secondsMills = Math.floor((distance % (1000 * 60)) / 1000);
               mins.innerHTML = digits(minutesMills);
               seconds.innerHTML = digits(secondsMills);
-              console.log("stopwatch");
             }
           });
       }, 1000);
@@ -90,7 +86,6 @@ const countdown = {
       chrome.runtime.sendMessage({
         msg: "countdownInit",
       });
-      console.log("countdown");
     }, countdown.delay);
   },
   end: () => {
@@ -108,24 +103,13 @@ window.onload = () => {
 
 window.onblur = () => {
   stopwatch.saveDigitsText();
-  console.log('hello');
-}
+};
 
 function updatePanel() {
-  chrome.runtime.sendMessage({ msg: "getState" }, (response) => {
+  chrome.storage.sync.get(["state"]).then((result) => {
     hideAll();
-    switch (response) {
+    switch (result.state) {
       case START:
-        // var db = new dexie.Dexie("Test");
-        // db.version(1).stores({ food: "name, callorie" });
-        // db.food
-        //   .bulkPut([
-        //     { name: "bana", callorie: 342 },
-        //     { name: "salad", callorie: 242 },
-        //   ])
-        //   .then(() => {
-        //     console.log(db.food.toArray());
-        //   });
         countdown.end();
         startPanel.style.display = "block";
         startBtn.onclick = () => {
@@ -139,6 +123,7 @@ function updatePanel() {
         stopwatchPanel.style.display = "block";
         stopwatch.loadDigitsText();
         updateDivertBtn();
+        divertSwitchHandler();
         restBtn.onclick = () => {
           stopwatch.end();
           changeState(COUNTDOWN);
@@ -192,29 +177,41 @@ function countdownTickHandler() {
   });
 }
 
-function divert() {
-  chrome.runtime.sendMessage({ msg: "divert", value: true }, (is_divert) => {
-    if (is_divert && stopwatch.interval !== null) stopwatch.stop();
-    else if (!is_divert) stopwatch.update();
-    divertBtn.innerHTML = is_divert
-      ? '<i class="fas fa-play fa-xs"></i> Resume'
-      : '<i class="fas fa-pause fa-xs"></i> Divert';
-    stopwatchClock.className = is_divert ? "stopwatch_paused" : "stopwatch";
-    stopwatchText.className = is_divert
-      ? "stopwatch_text_paused"
-      : "stopwatch_text";
+function divertSwitchHandler() {
+  chrome.runtime.onMessage.addListener(function (request) {
+    if (request.msg == "divertSwitched") {
+      if (request.value && stopwatch.interval !== null) stopwatch.stop();
+      else if (!request.value) stopwatch.update();
+      divertBtn.innerHTML = request.value
+        ? '<i class="fas fa-play fa-xs"></i> Resume'
+        : '<i class="fas fa-pause fa-xs"></i> Divert';
+      stopwatchClock.className = request.value
+        ? "stopwatch_paused"
+        : "stopwatch";
+      stopwatchText.className = request.value
+        ? "stopwatch_text_paused"
+        : "stopwatch_text";
+    }
   });
 }
 
+function divert() {
+  chrome.runtime.sendMessage({ msg: "divert", value: true });
+}
+
 function updateDivertBtn() {
-  chrome.runtime.sendMessage({ msg: "divert", value: false }, (is_divert) => {
-    if (!is_divert) stopwatch.update();
-    divertBtn.innerHTML = is_divert
-      ? '<i class="fas fa-play fa-xs"></i> Resume'
-      : '<i class="fas fa-pause fa-xs"></i> Divert';
-    stopwatchClock.className = is_divert ? "stopwatch_paused" : "stopwatch";
-    stopwatchText.className = is_divert
-      ? "stopwatch_text_paused"
-      : "stopwatch_text";
+  chrome.runtime.sendMessage({ msg: "divert", value: false }, () => {
+    chrome.storage.sync.get(["divert"]).then((result) => {
+      if (!result.divert) stopwatch.update();
+      divertBtn.innerHTML = result.divert
+        ? '<i class="fas fa-play fa-xs"></i> Resume'
+        : '<i class="fas fa-pause fa-xs"></i> Divert';
+      stopwatchClock.className = result.divert
+        ? "stopwatch_paused"
+        : "stopwatch";
+      stopwatchText.className = result.divert
+        ? "stopwatch_text_paused"
+        : "stopwatch_text";
+    });
   });
 }
