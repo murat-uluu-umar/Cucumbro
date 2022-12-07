@@ -16,21 +16,9 @@
     "nativeMessaging",
     "alarms",
     "notifications",
-    "storage",
-    "scripting"
+    "storage"
   ],
   "action": {
     "default_popup": "Views/popup.html"
-  },
-  "content_scripts": [
-    {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "Scripts/DexieJs/database.js"
-      ],
-      "run_at": "document_start"
-    }
-  ]
+  }
 }
