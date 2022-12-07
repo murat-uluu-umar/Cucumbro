@@ -11,7 +11,6 @@ const PAUSEWIN = "PAUSEWIN";
 
 var state = START;
 chrome.storage.sync.get(["state"]).then((result) => {
-  console.log(result.state);
   if (result.state != undefined) {
     state = result.state;
   } else {
@@ -104,11 +103,11 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             result.scheduledTime,
             result.divertSummTime
           );
-          restTime = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          restTime = (((distance % (1000 * 60)) / 1000) / 3) / 60;
           chrome.alarms.get(ALARM, (alarm) => {
             if (alarm == undefined) {
               if (ringed == false) {
-                chrome.alarms.create(ALARM, { delayInMinutes: restTime / 3 });
+                chrome.alarms.create(ALARM, { delayInMinutes: restTime});
                 setBadge(REST, [227, 181, 73, 1]);
               }
             }
@@ -139,8 +138,6 @@ function divert() {
     .get(["divertStartTime", "divertSummTime", "divert"])
     .then((result) => {
       var is_divert = result.divert ? false : true;
-      console.log(new Date(result.divertStartTime).toTimeString());
-      console.log(new Date(result.divertSummTime).toTimeString());
       if (is_divert) {
         chrome.storage.sync.set({ divertStartTime: Date.now() });
         setBadge(PAUSE, [120, 39, 179, 1]);
