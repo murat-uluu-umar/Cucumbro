@@ -104,11 +104,11 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             result.scheduledTime,
             result.divertSummTime
           );
-          restTime = (distance % (1000 * 60)) / 1000 / 3;
+          restTime = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
           chrome.alarms.get(ALARM, (alarm) => {
             if (alarm == undefined) {
               if (ringed == false) {
-                chrome.alarms.create(ALARM, { delayInMinutes: restTime / 60 });
+                chrome.alarms.create(ALARM, { delayInMinutes: restTime / 3 });
                 setBadge(REST, [227, 181, 73, 1]);
               }
             }
