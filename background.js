@@ -103,7 +103,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             result.scheduledTime,
             result.divertSummTime
           );
-          restTime = (((distance % (1000 * 60)) / 1000) / 3) / 60;
+          restTime = ((distance / 1000) / 3) / 60;
+          console.log(restTime);
           chrome.alarms.get(ALARM, (alarm) => {
             if (alarm == undefined) {
               if (ringed == false) {
