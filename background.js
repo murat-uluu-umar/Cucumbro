@@ -142,12 +142,14 @@ function divert() {
       if (is_divert) {
         chrome.storage.sync.set({ divertStartTime: Date.now() });
         setBadge(PAUSE, [120, 39, 179, 1]);
+        pauseWindow();
       } else {
         setBadge(PLAY, [120, 39, 179, 1]);
         var divertEndTime = Date.now() - result.divertStartTime;
         chrome.storage.sync.set({
           divertSummTime: result.divertSummTime + divertEndTime,
         });
+        chrome.notifications.clear(PAUSEWIN);
       }
       chrome.storage.sync.set({ divert: is_divert });
       chrome.runtime.sendMessage({ msg: "divertSwitched", value: is_divert });

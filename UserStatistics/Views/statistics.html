@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="Styles/statistics.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css">
     <style>
         @font-face {
             font-family: pixel_font;
@@ -18,17 +18,32 @@
 
 <body>
     <div class="container">
-        <div class="header">Header</div>
-        <div class="calendar">
-            <ui id="calendar_toolbar">
-                <button> < </button>
-                <label>December</label>
-                <button> > </button>
-            </ui>
+        <div id="header" class="panel">Header</div>
+        <div id="calendar" class="panel">
+            <div id="calendar_toolbar">
+                <button id="backward_btn"> 1 </button>
+                <label id="calendar_title">December</label>
+                <button id="forward_btn"> 2 </button>
+            </div>
+            <div id="days">
+                <label>Su</label>
+                <label>Mn</label>
+                <label>Th</label>
+                <label>Wn</label>
+                <label>Tu</label>
+                <label>Fr</label>
+                <label>St</label>
+            </div>
+            <div id="items">
+            </div>
         </div>
-        <div class="stats">Statistics</div>
-        <div class="options">Options</div>
+        <div id="stats" class="panel">Statistics</div>
+        <div id="options" class="panel">Options</div>
     </div>
+    <script src="/UserStatistics/Models/calendar.js"></script>
+    <script src="/UserStatistics/Models/day.js"></script>
+    <script src="/UserStatistics/Models/task.js"></script>
+    <script src="/UserStatistics/Relation/statistics.js"></script>
 </body>
 
 </html>

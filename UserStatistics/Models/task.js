@@ -1,4 +1,4 @@
-export class Taks {
+class Task {
 
     static TASK = 0;
     static REST = 1;

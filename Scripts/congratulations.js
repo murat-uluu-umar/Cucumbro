@@ -17,6 +17,10 @@ window.onload = () => {
   sound();
 
   messageText.innerHTML = randomText();
+  statsBtn.onclick = () => {
+    window.open("../UserStatistics/Views/statistics.html", '_blank').focus(); 
+    window.close();
+  }
 };
 
 function sound() {
