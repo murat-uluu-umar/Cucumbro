@@ -6,6 +6,8 @@ var calendar = null;
 
 function intiCalendar() {
   calendar = new Calendar();
+  updateCalendar();
+  initHandlers();
 }
 
 function updateCalendar() {
@@ -18,8 +20,6 @@ function updateCalendar() {
 
 window.onload = () => {
   intiCalendar();
-  updateCalendar();
-  initHandlers();
 };
 
 function initHandlers() {
