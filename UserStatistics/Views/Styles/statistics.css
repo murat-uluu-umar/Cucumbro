@@ -68,7 +68,7 @@ button:active {
 
 #calendar_toolbar {
     justify-content: space-between; 
-    display: block;
+    display: flex;
     margin: 3px;
     padding-left: 15px;
     padding-right: 15px;

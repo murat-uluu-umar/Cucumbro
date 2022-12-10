@@ -47,7 +47,3 @@ function createDay(day, selected) {
   }
   return label;
 }
-
-function onDayClicked(elem) {
-  
-}
