@@ -1,10 +1,5 @@
 class OverallGraph {
-  constructor(labels, subjects) {
-    subjects.forEach(subject => {
-        subject.forEach(days => {
-            
-        });
-    });
+  constructor() {
     this.data = {
       labels: labels,
       datasets: [],

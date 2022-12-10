@@ -1,8 +1,3 @@
-const DATABASE = "WarptimeDB";
-const DAYSDATA = "DAYSDATA";
-const SUBJECTS = "SUBJECTS";
-const VERSION = 2;
-
 var calendarItems = document.getElementById("items");
 var calendarTitle = document.getElementById("calendar_title");
 var forwardBtn = document.getElementById("forward_btn");
@@ -25,17 +20,32 @@ function intiCalendar() {
 
 function initDataBase() {
   if (!indexedDB) {
-    window.alert("IndexedDB could not be found in this browser!");
+    window.alert(
+      "Database could not be found in this browser!\nYou cannot use thi feature!"
+    );
     window.close();
   }
   database = new DataBase();
-  database.openDataBase(DATABASE, DAYSDATA, VERSION, (store) => {
-    store.put({
-      day: new Date(),
-      amount: { start: new Date(), end: new Date() },
-      type: "task",
-      subject: "English",
-    });
+  database.openDataBase((store) => {
+    var subj = [
+      "Art",
+      "Math",
+      "English",
+      "Programming",
+      "Social Engineering",
+      "Finacial Grammar",
+      "Literature",
+    ];
+    for (let i = 0; i < subj.length; i++) {
+      for (let j = 0; j < 4; j++) {
+        store.put({
+          day: i,
+          amount: { start: i + Math.random * j, end:i + Math.random *Math.random * j+1 },
+          type: "task",
+          subject: Math.floor(Math.random * subj.length),
+        });
+      }
+    }
   });
 }
 
