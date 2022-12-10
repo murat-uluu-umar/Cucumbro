@@ -52,10 +52,17 @@ button:active {
     background-color: rgb(70, 124, 126);
 }
 
-#stats {
+#overall-stats {
     grid-column-start: 2;
     grid-column-end: 3;
     grid-row-start: 2;
+    grid-row-end: 3;
+}
+
+#stats {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 3;
     grid-row-end: 4;
 }
 

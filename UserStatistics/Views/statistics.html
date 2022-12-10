@@ -3,14 +3,14 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="Styles/statistics.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
+    <script src="/UserStatistics/Libs/charts.js"></script>
     <style>
         @font-face {
             font-family: pixel_font;
-            src: url('../../Resources/Font/pixel_font.TTF');
+            src: url('/Resources/Font/pixel_font.TTF');
         }
     </style>
     <title>Stats</title>
@@ -37,13 +37,17 @@
             <div id="items">
             </div>
         </div>
-        <div id="stats" class="panel">Statistics</div>
+        <div id="overall-stats" class="panel">
+
+        </div>
+        <div id="stats" class="panel"> <canvas id="overall-graph"></canvas></div>
         <div id="options" class="panel">Options</div>
     </div>
     <script src="/UserStatistics/Models/calendar.js"></script>
     <script src="/UserStatistics/Models/day.js"></script>
     <script src="/UserStatistics/Models/task.js"></script>
     <script src="/UserStatistics/Relation/statistics.js"></script>
+    <script src="/UserStatistics/Models/database.js"></script>
 </body>
 
 </html>
