@@ -18,9 +18,9 @@ window.onload = () => {
 
   messageText.innerHTML = randomText();
   statsBtn.onclick = () => {
-    window.open("../UserStatistics/Views/statistics.html", '_blank').focus(); 
+    window.open("../UserStatistics/Views/statistics.html", "_blank").focus();
     window.close();
-  }
+  };
 };
 
 function sound() {
@@ -31,6 +31,12 @@ function sound() {
   if (audio) {
     audio.play();
   }
+  chrome.storage.local.get(["dayTasks"]).then((result) => {
+    new DataBase().openDataBase((store) => {
+      result.dayTasks.map((obj) => {store.put(obj)})
+      chrome.storage.local.set({ dayTasks: [] });
+    });
+  });
 }
 
 function randomText() {

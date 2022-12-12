@@ -15,7 +15,8 @@
     "nativeMessaging",
     "alarms",
     "notifications",
-    "storage"
+    "storage",
+    "unlimitedStorage"
   ],
   "action": {
     "default_popup": "Views/popup.html"

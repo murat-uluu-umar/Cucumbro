@@ -103,12 +103,16 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             result.scheduledTime,
             result.divertSummTime
           );
-          restTime = ((distance / 1000) / 3) / 60;
-          console.log(restTime);
+          restTime = distance / 1000 / 3 / 60;
+          addDataObject(
+            "task",
+            result.scheduledTime,
+            result.scheduledTime + distance
+          );
           chrome.alarms.get(ALARM, (alarm) => {
             if (alarm == undefined) {
               if (ringed == false) {
-                chrome.alarms.create(ALARM, { delayInMinutes: restTime});
+                chrome.alarms.create(ALARM, { delayInMinutes: restTime });
                 setBadge(REST, [227, 181, 73, 1]);
               }
             }
@@ -128,9 +132,10 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 });
 
 // alarm
-chrome.alarms.onAlarm.addListener(() => {
+chrome.alarms.onAlarm.addListener((alarm) => {
   countdownEnd();
   ringed = true;
+  addDataObject("rest", Date.now() - alarm.scheduledTime, alarm.scheduledTime);
 });
 
 // divert
@@ -146,6 +151,7 @@ function divert() {
       } else {
         setBadge(PLAY, [120, 39, 179, 1]);
         var divertEndTime = Date.now() - result.divertStartTime;
+        addDataObject("divert", result.divertStartTime, Date.now());
         chrome.storage.sync.set({
           divertSummTime: result.divertSummTime + divertEndTime,
         });
@@ -175,4 +181,27 @@ chrome.notifications.onClosed.addListener((id, byUser) => {
 function setBadge(text, color) {
   chrome.action.setBadgeText({ text: text });
   chrome.action.setBadgeBackgroundColor({ color: color });
+}
+
+function addDataObject(type, start, end) {
+  chrome.storage.local.get(["subject"]).then((result) => {
+    console.log(result.subject);
+    if (result.subject !== "") {
+      var obj = {
+        day: new Date().toLocaleDateString(),
+        subject: result.subject,
+        amount: {
+          start: start,
+          end: end,
+          dist: end - start,
+        },
+        type: type,
+      };
+      chrome.storage.local.get(["dayTasks"]).then((result) => {
+        var tasks = typeof result.dayTasks !== "object" ? [] : result.dayTasks;
+        tasks.push(obj);
+        chrome.storage.local.set({ dayTasks: tasks });
+      });
+    }
+  });
 }

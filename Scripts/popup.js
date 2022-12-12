@@ -8,6 +8,8 @@ var countdownPanel = document.getElementById("countdown");
 
 // start
 var startBtn = document.getElementById("startBtn");
+var newTaskInput = document.getElementById("new_task_input");
+var tasksDataList = document.getElementById("tasks");
 
 // stopwatch
 var mins = document.getElementById("tens");
@@ -88,11 +90,11 @@ const countdown = {
       });
     }, countdown.delay);
   },
-  end: () => {
+  end: (change = true) => {
     if (this.interval !== null) {
       clearInterval(this.interval);
       interval = null;
-      changeState(START);
+      if (change) changeState(START);
     }
   },
 };
@@ -110,9 +112,11 @@ function updatePanel() {
     hideAll();
     switch (result.state) {
       case START:
-        countdown.end();
+        initTasksDataList();
+        countdown.end(false);
         startPanel.style.display = "block";
         startBtn.onclick = () => {
+          addNewTask();
           changeState(STOPWATCH);
           chrome.runtime.sendMessage({ msg: "stopwatchStart" }, () => {
             stopwatch.update();
@@ -214,4 +218,28 @@ function updateDivertBtn() {
         : "stopwatch_text";
     });
   });
+}
+
+function initTasksDataList() {
+  tasksDataList.innerHTML = "";
+  newTaskInput.value = "";
+  chrome.storage.local.get(["tasks"]).then((result) => {
+    if (result.tasks) {
+      result.tasks.forEach((elem) => {
+        tasksDataList.innerHTML += `<option value='${elem}'/>`;
+      });
+    } else chrome.storage.local.set({ tasks: [] });
+  });
+}
+
+function addNewTask() {
+  chrome.storage.local.set({ subject: newTaskInput.value });
+  if (newTaskInput.value !== "") {
+    chrome.storage.local.get(["tasks"]).then((result) => {
+      var tasks = result.tasks;
+      tasks.push(newTaskInput.value);
+      tasks = [... new Set(tasks)];
+      chrome.storage.local.set({ tasks: tasks });
+    });
+  }
 }
