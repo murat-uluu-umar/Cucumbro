@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="Styles/statistics.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
     <script src="/UserStatistics/Libs/charts.js"></script>
+    <script src="/UserStatistics/Libs/hammer.js"></script>
+    <script src="/UserStatistics/Libs/chartZoom.js"></script>
     <style>
         @font-face {
             font-family: pixel_font;
@@ -38,9 +40,10 @@
             </div>
         </div>
         <div id="overall-stats" class="panel">
-
+            <div id="overall-options"><button id="reset_zoom">Reset zoom</button></div>
+            <canvas id="overall_graph"></canvas>
         </div>
-        <div id="stats" class="panel"> <canvas id="overall-graph"></canvas></div>
+        <div id="stats" class="panel"><canvas id="day_chart"></canvas></div>
         <div id="options" class="panel">Options</div>
     </div>
     <script src="/UserStatistics/Models/calendar.js"></script>
@@ -48,6 +51,7 @@
     <script src="/UserStatistics/Models/task.js"></script>
     <script src="/UserStatistics/Relation/statistics.js"></script>
     <script src="/UserStatistics/Models/database.js"></script>
+    <script src="/UserStatistics/Models/overallGraph.js"></script>
 </body>
 
 </html>

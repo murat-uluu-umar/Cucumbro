@@ -2,8 +2,23 @@ var calendarItems = document.getElementById("items");
 var calendarTitle = document.getElementById("calendar_title");
 var forwardBtn = document.getElementById("forward_btn");
 var backwardBtn = document.getElementById("backward_btn");
+var overallGraphCanvas = document.getElementById("overall_graph");
+var resetZoomBtn = document.getElementById("reset_zoom")
+var dayChartCanvar = document.getElementById("day_chart")
+
 var calendar = null;
 var database = null;
+var overallGraph = null;
+var overallChart = null;
+var subj = [
+  "Art",
+  "Math",
+  "English",
+  "Programming",
+  "Social Engineering",
+  "Finacial Grammar",
+  "Literature",
+];
 
 const indexedDB =
   window.indexedDB ||
@@ -18,6 +33,24 @@ function intiCalendar() {
   initHandlers();
 }
 
+function initOverallGraph(result) {
+  overallGraph = new OverallGraph();
+  var dataSets = [];
+  Object.keys(result.data.task).forEach((element, idx, arr) => {
+    var data = {
+      label: element,
+      data: Object.values(result.data.task)[idx],
+      fill: false,
+      tension: 0.1,
+    };
+    dataSets.push(data);
+  });
+  console.log(dataSets);
+  Chart.defaults.color = "blanchedalmond";
+  Chart.defaults.font.family = "pixel_font";
+  overallChart = new Chart(overallGraphCanvas, overallGraph.getConfig(dataSets));
+}
+
 function initDataBase() {
   if (!indexedDB) {
     window.alert(
@@ -27,25 +60,27 @@ function initDataBase() {
   }
   database = new DataBase();
   database.openDataBase((store) => {
-    var subj = [
-      "Art",
-      "Math",
-      "English",
-      "Programming",
-      "Social Engineering",
-      "Finacial Grammar",
-      "Literature",
-    ];
-    for (let i = 0; i < subj.length; i++) {
-      for (let j = 0; j < 4; j++) {
-        store.put({
-          day: i,
-          amount: { start: i + Math.random * j, end:i + Math.random *Math.random * j+1 },
-          type: "task",
-          subject: Math.floor(Math.random * subj.length),
-        });
-      }
-    }
+    // for (let d = 0; d < 3; d++) {
+    //   for (let i = 0; i < subj.length; i++) {
+    //     for (let j = 0; j < 8; j++) {
+    //       store.put({
+    //         day: i,
+    //         amount: {
+    //           start: i + Math.random() * j,
+    //           end: i + Math.random() * Math.random() * j + 1,
+    //           dist: i + Math.random() * Math.random() * j + 1,
+    //         },
+    //         type: ["task", "divert", "rest"][Math.floor(Math.random() * 3)],
+    //         subject: subj[Math.floor(Math.random() * subj.length)],
+    //       });
+    //     }
+    //   }
+    // }
+    var allRecords = store.getAll();
+    allRecords.onsuccess = function (event) {
+      var result = event.target.result;
+      initOverallGraph(database.loadData(result));
+    };
   });
 }
 
@@ -71,6 +106,18 @@ function initHandlers() {
     calendar.backward();
     updateCalendar();
   };
+  resetZoomBtn.onclick = () => {
+    overallChart.resetZoom();
+  }
+  calendar.onSelected = (idx) => {
+    database.openDataBase((store) => {
+      var query = store.index(['Days']).getAll([idx.getDate()]);
+      query.onsuccess = (event) => {
+        var result = event.target.result;
+        console.log(result);
+      }
+    });
+  }
 }
 
 function createDay(day, selected) {
@@ -87,10 +134,3 @@ function createDay(day, selected) {
   }
   return label;
 }
-
-// const ctx = document.getElementById("myChart");
-
-// new Chart(ctx, config);
-
-// Chart.defaults.color = "blanchedalmond";
-// Chart.defaults.font.family = "pixel_font";

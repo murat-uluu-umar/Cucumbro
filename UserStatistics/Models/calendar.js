@@ -2,6 +2,7 @@ class Calendar {
   constructor() {
     this.date = new Date();
     this.selected = null;
+    this.onSelected = null;
   }
   getDays() {
     var date = new Date(this.date.getTime());
@@ -30,5 +31,6 @@ class Calendar {
   }
   select(index) {
     if (this.days) this.selected = this.days[this.voids + index];
+    if (typeof this.onSelected == 'function') this.onSelected(this.selected);
   }
 }

@@ -1,50 +1,42 @@
 class OverallGraph {
-  constructor() {
-    this.data = {
-      labels: labels,
-      datasets: [],
-    };
+  constructor() {}
 
-    this.config = {
-      type: "line",
-      data: data,
+  getConfig(data) {
+    console.log(data);
+    return {
+      type: "bubble",
+      data: {
+        datasets: data,
+      },
       options: {
-        responsive: true,
+        parsing: {
+          xAxisKey: "day",
+          yAxisKey: "dist",
+        },
+        radius: 7,
+        pointStyle: 'circle',
         plugins: {
           title: {
             display: true,
-            text: "Overall statistics",
+            text: "Overall score",
           },
-        },
-        interaction: {
-          intersect: true,
-        },
-        scales: {
-          x: {
-            display: true,
-            title: {
-              display: true,
+          zoom: {
+            zoom: {
+              wheel: {
+                enabled: true,
+              },
+              pinch: {
+                enabled: true,
+              },
+              mode: "xy",
             },
-          },
-          y: {
-            display: true,
-            title: {
-              display: true,
-              text: "Value",
+            pan: {
+              enabled: true,
+              mode: "xy",
             },
           },
         },
       },
-    };
-  }
-
-  getGraphTemplate(label, data) {
-    return {
-      label: label,
-      data: data,
-      fill: false,
-      tension: 0.1,
-      cubicInterpolationMode: "monotone",
     };
   }
 }
