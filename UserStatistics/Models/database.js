@@ -7,6 +7,22 @@ class DataBase {
   constructor() {}
 
   openDataBase(callback) {
+    var request = this.dataBase();
+    request.onsuccess = function () {
+      const db = request.result;
+
+      const transaction = db.transaction(DAYSDATA, "readwrite");
+
+      const store = transaction.objectStore(DAYSDATA);
+      callback(store);
+
+      transaction.oncomplete = function () {
+        db.close();
+      };
+    };
+  }
+
+  dataBase() {
     const request = indexedDB.open(DATABASE, VERSION);
     request.onerror = function (event) {
       console.error("An error occurred with IndexedDB");
@@ -27,47 +43,8 @@ class DataBase {
         unique: false,
       });
     };
-    request.onsuccess = function () {
-      const db = request.result;
-
-      const transaction = db.transaction(DAYSDATA, "readwrite");
-
-      const store = transaction.objectStore(DAYSDATA);
-      callback(store);
-
-      transaction.oncomplete = function () {
-        db.close();
-      };
-    };
+    return request;
   }
-
-  openSubjectsDataBase(callback) {
-    const request = indexedDB.open(DATABASE, VERSION);
-    request.onerror = function (event) {
-      console.error("An error occurred with IndexedDB");
-      console.error(event);
-    };
-    request.onupgradeneeded = function () {
-      const db = request.result;
-
-      const store = db.createObjectStore(SUBJECTS, { keyPath: "subject" });
-
-      store.createIndex("Subject", ["subject"], { unique: false });
-    };
-    request.onsuccess = function () {
-      const db = request.result;
-
-      const transaction = db.transaction(SUBJECTS, "readwrite");
-
-      const store = transaction.objectStore(SUBJECTS);
-      callback(store);
-
-      transaction.oncomplete = function () {
-        db.close();
-      };
-    };
-  }
-
   loadData(result) {
     var data = {};
     var days = [];

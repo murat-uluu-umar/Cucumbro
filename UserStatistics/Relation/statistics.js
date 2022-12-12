@@ -3,8 +3,8 @@ var calendarTitle = document.getElementById("calendar_title");
 var forwardBtn = document.getElementById("forward_btn");
 var backwardBtn = document.getElementById("backward_btn");
 var overallGraphCanvas = document.getElementById("overall_graph");
-var resetZoomBtn = document.getElementById("reset_zoom")
-var dayChartCanvar = document.getElementById("day_chart")
+var resetZoomBtn = document.getElementById("reset_zoom");
+var dayChartCanvar = document.getElementById("day_chart");
 
 var calendar = null;
 var database = null;
@@ -48,7 +48,10 @@ function initOverallGraph(result) {
   console.log(dataSets);
   Chart.defaults.color = "blanchedalmond";
   Chart.defaults.font.family = "pixel_font";
-  overallChart = new Chart(overallGraphCanvas, overallGraph.getConfig(dataSets));
+  overallChart = new Chart(
+    overallGraphCanvas,
+    overallGraph.getConfig(dataSets)
+  );
 }
 
 function initDataBase() {
@@ -108,16 +111,16 @@ function initHandlers() {
   };
   resetZoomBtn.onclick = () => {
     overallChart.resetZoom();
-  }
+  };
   calendar.onSelected = (idx) => {
     database.openDataBase((store) => {
-      var query = store.index(['Days']).getAll([idx.getDate()]);
+      var query = store.index(["Days"]).getAll([idx.getDate()]);
       query.onsuccess = (event) => {
         var result = event.target.result;
         console.log(result);
-      }
+      };
     });
-  }
+  };
 }
 
 function createDay(day, selected) {
