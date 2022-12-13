@@ -33,6 +33,7 @@ function sound() {
   }
   chrome.storage.local.get(["dayTasks"]).then((result) => {
     new DataBase().openDataBase((store) => {
+      console.log(result.dayTasks);
       result.dayTasks.map((obj) => {store.put(obj)})
       chrome.storage.local.set({ dayTasks: [] });
     });

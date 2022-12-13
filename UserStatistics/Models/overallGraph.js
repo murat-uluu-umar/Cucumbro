@@ -2,7 +2,6 @@ class OverallGraph {
   constructor() {}
 
   getConfig(data) {
-    console.log(data);
     return {
       type: "bubble",
       data: {
@@ -13,8 +12,21 @@ class OverallGraph {
           xAxisKey: "day",
           yAxisKey: "dist",
         },
+        scales: {
+          x: {
+            type: "time",
+            time: {
+              unit: "day",
+            },
+          },
+          y: {
+            type: "time",
+            time: {
+              unit: "minute"
+            },
+          },
+        },
         radius: 7,
-        pointStyle: 'circle',
         plugins: {
           title: {
             display: true,

@@ -40,12 +40,9 @@ function initOverallGraph(result) {
     var data = {
       label: element,
       data: Object.values(result.data.task)[idx],
-      fill: false,
-      tension: 0.1,
     };
     dataSets.push(data);
   });
-  console.log(dataSets);
   Chart.defaults.color = "blanchedalmond";
   Chart.defaults.font.family = "pixel_font";
   overallChart = new Chart(
@@ -69,9 +66,9 @@ function initDataBase() {
     //       store.put({
     //         day: i,
     //         amount: {
-    //           start: i + Math.random() * j,
-    //           end: i + Math.random() * Math.random() * j + 1,
-    //           dist: i + Math.random() * Math.random() * j + 1,
+    //           start: i + Math.random() * j * 10000000,
+    //           end: i + Math.random() * Math.random() * j + 1 * 10000000,
+    //           dist: i + Math.random() * Math.random() * j + 1 * 10000000,
     //         },
     //         type: ["task", "divert", "rest"][Math.floor(Math.random() * 3)],
     //         subject: subj[Math.floor(Math.random() * subj.length)],
@@ -81,8 +78,7 @@ function initDataBase() {
     // }
     var allRecords = store.getAll();
     allRecords.onsuccess = function (event) {
-      var result = event.target.result;
-      initOverallGraph(database.loadData(result));
+      initOverallGraph(database.loadData(event.target.result));
     };
   });
 }

@@ -188,12 +188,12 @@ function addDataObject(type, start, end) {
     console.log(result.subject);
     if (result.subject !== "") {
       var obj = {
-        day: new Date().toLocaleDateString(),
+        day: new Date().toJSON(),
         subject: result.subject,
         amount: {
-          start: start,
-          end: end,
-          dist: end - start,
+          start: new Date(start).toJSON(),
+          end: new Date(end).toJSON(),
+          dist: new Date(end - start).toJSON(),
         },
         type: type,
       };
