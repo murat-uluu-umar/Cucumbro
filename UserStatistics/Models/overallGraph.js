@@ -3,7 +3,7 @@ class OverallGraph {
 
   getConfig(data) {
     return {
-      type: "bubble",
+      type: "line",
       data: {
         datasets: data,
       },
