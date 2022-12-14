@@ -44,15 +44,20 @@
             <div id="overall-options"><button id="reset_zoom">Reset zoom</button></div>
             <canvas id="overall_graph"></canvas>
         </div>
-        <div id="stats" class="panel"><canvas id="day_chart"></canvas></div>
+        <div id="stats" class="panel">
+            <div id="polar-chart-div"><canvas id="polar_chart"></canvas></div>
+            <div id="day"></div>
+        </div>
         <div id="options" class="panel">Options</div>
     </div>
+    <script src="/UserStatistics/Libs/chartColors.js"></script>
     <script src="/UserStatistics/Models/calendar.js"></script>
     <script src="/UserStatistics/Models/day.js"></script>
     <script src="/UserStatistics/Models/task.js"></script>
     <script src="/UserStatistics/Relation/statistics.js"></script>
     <script src="/UserStatistics/Models/database.js"></script>
     <script src="/UserStatistics/Models/overallGraph.js"></script>
+    <script src="/UserStatistics/Models/polarChart.js"></script>
 </body>
 
 </html>

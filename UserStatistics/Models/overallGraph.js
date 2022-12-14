@@ -9,7 +9,7 @@ class OverallGraph {
       },
       options: {
         parsing: {
-          xAxisKey: "day",
+          xAxisKey: "start",
           yAxisKey: "dist",
         },
         scales: {
@@ -22,12 +22,15 @@ class OverallGraph {
           y: {
             type: "time",
             time: {
-              unit: "minute"
+              unit: "minute",
             },
           },
         },
         radius: 7,
         plugins: {
+          colors: {
+            enabled: true,
+          },
           title: {
             display: true,
             text: "Overall score",

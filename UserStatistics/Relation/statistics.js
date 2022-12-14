@@ -4,12 +4,21 @@ var forwardBtn = document.getElementById("forward_btn");
 var backwardBtn = document.getElementById("backward_btn");
 var overallGraphCanvas = document.getElementById("overall_graph");
 var resetZoomBtn = document.getElementById("reset_zoom");
-var dayChartCanvar = document.getElementById("day_chart");
+var polarChartCanvas = document.getElementById("polar_chart");
 
 var calendar = null;
 var database = null;
 var overallGraph = null;
 var overallChart = null;
+var polarChart = null;
+var polarChartInstance = null;
+
+var backgroundColor = palette("tol", 10).map(
+  function (hex) {
+    return "#" + hex;
+  }
+);
+
 var subj = [
   "Art",
   "Math",
@@ -33,15 +42,17 @@ function intiCalendar() {
   initHandlers();
 }
 
-function initOverallGraph(result) {
+function initOverallGraph(data) {
   overallGraph = new OverallGraph();
   var dataSets = [];
-  Object.keys(result.data.task).forEach((element, idx, arr) => {
-    var data = {
+  Object.keys(data["task"]).forEach((element, idx) => {
+    var item = {
       label: element,
-      data: Object.values(result.data.task)[idx],
+      data: Object.values(data.task)[idx],
+      tension: 0.1,
+      backgroundColor: backgroundColor
     };
-    dataSets.push(data);
+    dataSets.push(item);
   });
   Chart.defaults.color = "blanchedalmond";
   Chart.defaults.font.family = "pixel_font";
@@ -49,6 +60,15 @@ function initOverallGraph(result) {
     overallGraphCanvas,
     overallGraph.getConfig(dataSets)
   );
+}
+
+function initDayStats() {
+  polarChart = new PolarChart(database);
+  polarChartInstance = new Chart(polarChartCanvas, polarChart.getConfig());
+  polarChart.onUpdate = (config) => {
+    polarChartInstance.destroy();
+    polarChartInstance = new Chart(polarChartCanvas, config);
+  };
 }
 
 function initDataBase() {
@@ -64,7 +84,7 @@ function initDataBase() {
     //   for (let i = 0; i < subj.length; i++) {
     //     for (let j = 0; j < 8; j++) {
     //       store.put({
-    //         day: i,
+    //         day: new Date(Date.now() + i*1000000).toJSON(),
     //         amount: {
     //           start: i + Math.random() * j * 10000000,
     //           end: i + Math.random() * Math.random() * j + 1 * 10000000,
@@ -94,6 +114,7 @@ function updateCalendar() {
 window.onload = () => {
   initDataBase();
   intiCalendar();
+  initDayStats();
 };
 
 function initHandlers() {
@@ -109,13 +130,7 @@ function initHandlers() {
     overallChart.resetZoom();
   };
   calendar.onSelected = (idx) => {
-    database.openDataBase((store) => {
-      var query = store.index(["Days"]).getAll([idx.getDate()]);
-      query.onsuccess = (event) => {
-        var result = event.target.result;
-        console.log(result);
-      };
-    });
+    polarChart.update(idx.toLocaleDateString());
   };
 }
 

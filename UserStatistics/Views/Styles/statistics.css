@@ -62,7 +62,6 @@ button:active {
 
 #overall-options {
     text-align: center;
-
 }
 
 #stats {
@@ -70,6 +69,8 @@ button:active {
     grid-column-end: 3;
     grid-row-start: 2;
     grid-row-end: 3;
+    display: flex;
+    justify-content: space-between;
 }
 
 #header {
@@ -141,5 +142,6 @@ button:active {
     color: cadetblue;
 }
 
-#overall_graph {
+#polar-chart-div {
+    height: 200px;
 }

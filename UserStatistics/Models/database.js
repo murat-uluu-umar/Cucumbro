@@ -1,7 +1,7 @@
 const DATABASE = "WarptimeDB";
 const DAYSDATA = "DAYSDATA";
 const SUBJECTS = "SUBJECTS";
-const VERSION = 5;
+const VERSION = 6;
 
 class DataBase {
   constructor() {}
@@ -42,6 +42,9 @@ class DataBase {
       store.createIndex("Subjects-Tasks", ["subject", "type"], {
         unique: false,
       });
+      store.createIndex("Days-Tasks", ["day", "type"], {
+        unique: false,
+      });
     };
     return request;
   }
@@ -55,7 +58,7 @@ class DataBase {
       while (i < result.length && day === result[i].day) {
         var subj = result[i].subject;
         var piece = {
-          day: result[i].day,
+          start: result[i].amount.start,
           dist: result[i].amount.dist,
         };
         var type = result[i].type;
@@ -66,6 +69,6 @@ class DataBase {
         i++;
       }
     }
-    return { data, days };
+    return data;
   }
 }
