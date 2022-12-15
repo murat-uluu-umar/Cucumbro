@@ -3,6 +3,7 @@ class Calendar {
     this.date = new Date();
     this.selected = null;
     this.onSelected = null;
+    this.hightlighted = {};
   }
   getDays() {
     var date = new Date(this.date.getTime());
@@ -32,5 +33,11 @@ class Calendar {
   select(index) {
     if (this.days) this.selected = this.days[this.voids + index];
     if (typeof this.onSelected == 'function') this.onSelected(this.selected);
+  }
+  initHightlightDays(data) {
+    data.forEach(element => {
+      console.log(element);
+      this.hightlighted[element.day] = true;      
+    });
   }
 }

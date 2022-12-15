@@ -29,7 +29,6 @@ const indexedDB =
 
 function intiCalendar() {
   calendar = new Calendar();
-  updateCalendar();
   initHandlers();
 }
 
@@ -75,25 +74,11 @@ function initDataBase() {
   }
   database = new DataBase();
   database.openDataBase((store) => {
-    // for (let d = 0; d < 3; d++) {
-    //   for (let i = 0; i < subj.length; i++) {
-    //     for (let j = 0; j < 8; j++) {
-    //       store.put({
-    //         day: new Date(Date.now() + i*1000000).toJSON(),
-    //         amount: {
-    //           start: i + Math.random() * j * 10000000,
-    //           end: i + Math.random() * Math.random() * j + 1 * 10000000,
-    //           dist: i + Math.random() * Math.random() * j + 1 * 10000000,
-    //         },
-    //         type: ["task", "divert", "rest"][Math.floor(Math.random() * 3)],
-    //         subject: subj[Math.floor(Math.random() * subj.length)],
-    //       });
-    //     }
-    //   }
-    // }
     var allRecords = store.getAll();
     allRecords.onsuccess = function (event) {
       initOverallGraph(database.loadData(event.target.result));
+      calendar.initHightlightDays(event.target.result);
+      updateCalendar();
     };
   });
 }
@@ -107,8 +92,8 @@ function updateCalendar() {
 }
 
 window.onload = () => {
-  initDataBase();
   intiCalendar();
+  initDataBase();
   initDayStats();
 };
 
@@ -136,6 +121,7 @@ function createDay(day, selected) {
     if (selected)
       label.id = selected.getTime() !== day.getTime() ? "day" : "day-selected";
     else label.id = "day";
+    if (calendar.hightlighted[day.toLocaleDateString()]) label.className = "hightlighted";
     label.innerHTML = day.getDate();
     label.addEventListener("click", function (event) {
       calendar.select(event.target.innerHTML - 1);
@@ -154,7 +140,6 @@ function updateDayScore(data) {
 }
 
 function getScoreItem(item) {
-  console.log(item);
   var dayScoreItem = `
   <label class="time-lable">
   <label>
@@ -172,19 +157,14 @@ function getScoreItem(item) {
       Rest: ${item.rest.start} - ${item.rest.end} | ${item.rest.dist}
   </label>
   </label>`;
-  console.log(dayScoreItem);
   return dayScoreItem;
 }
 
 function getTotalScore(total) {
   var timeZoneOffset = new Date().getTimezoneOffset() * 60000;
   return `
-  <li>Task: ${new Date(
-    total.task + timeZoneOffset
-  ).toLocaleTimeString()}</li> 
-  <li>Rest: ${new Date(
-    total.rest + timeZoneOffset
-  ).toLocaleTimeString()}</li> 
+  <li>Task: ${new Date(total.task + timeZoneOffset).toLocaleTimeString()}</li> 
+  <li>Rest: ${new Date(total.rest + timeZoneOffset).toLocaleTimeString()}</li> 
   <li>Divert: ${new Date(
     total.divert + timeZoneOffset
   ).toLocaleTimeString()}</li> `;
