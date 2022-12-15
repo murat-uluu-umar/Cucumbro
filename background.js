@@ -133,9 +133,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 // alarm
 chrome.alarms.onAlarm.addListener((alarm) => {
+  addDataObject("rest", Date.now() - restTime * 6000, alarm.scheduledTime);
   countdownEnd();
   ringed = true;
-  addDataObject("rest", Date.now() - alarm.scheduledTime, alarm.scheduledTime);
 });
 
 // divert
@@ -184,6 +184,7 @@ function setBadge(text, color) {
 }
 
 function addDataObject(type, start, end) {
+  console.log(type);
   chrome.storage.local.get(["subject"]).then((result) => {
     console.log(result.subject);
     if (result.subject !== "") {
@@ -191,9 +192,9 @@ function addDataObject(type, start, end) {
         day: new Date().toLocaleDateString(),
         subject: result.subject,
         amount: {
-          start: new Date(start).toJSON(),
-          end: new Date(end).toJSON(),
-          dist: new Date(end - start).toJSON(),
+          start: start,
+          end: end,
+          dist: end - start,
         },
         type: type,
       };

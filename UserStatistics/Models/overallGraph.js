@@ -16,13 +16,13 @@ class OverallGraph {
           x: {
             type: "time",
             time: {
-              unit: "day",
+              unit: "day"
             },
           },
           y: {
             type: "time",
             time: {
-              unit: "minute",
+              unit: "minute"
             },
           },
         },

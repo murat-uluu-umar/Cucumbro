@@ -5,6 +5,8 @@ var backwardBtn = document.getElementById("backward_btn");
 var overallGraphCanvas = document.getElementById("overall_graph");
 var resetZoomBtn = document.getElementById("reset_zoom");
 var polarChartCanvas = document.getElementById("polar_chart");
+var dayData = document.getElementById("day-data");
+var dayTotalData = document.getElementById("overall-day-score");
 
 var calendar = null;
 var database = null;
@@ -12,22 +14,11 @@ var overallGraph = null;
 var overallChart = null;
 var polarChart = null;
 var polarChartInstance = null;
+var dayGraph = null;
 
-var backgroundColor = palette("tol", 10).map(
-  function (hex) {
-    return "#" + hex;
-  }
-);
-
-var subj = [
-  "Art",
-  "Math",
-  "English",
-  "Programming",
-  "Social Engineering",
-  "Finacial Grammar",
-  "Literature",
-];
+var palette = palette("cb-PuOr", 8).map(function (hex) {
+  return "#" + hex;
+});
 
 const indexedDB =
   window.indexedDB ||
@@ -50,11 +41,11 @@ function initOverallGraph(data) {
       label: element,
       data: Object.values(data.task)[idx],
       tension: 0.1,
-      backgroundColor: backgroundColor
+      backgroundColor: palette,
     };
     dataSets.push(item);
   });
-  Chart.defaults.color = "blanchedalmond";
+  Chart.defaults.color = "yellowgreen";
   Chart.defaults.font.family = "pixel_font";
   overallChart = new Chart(
     overallGraphCanvas,
@@ -64,10 +55,14 @@ function initOverallGraph(data) {
 
 function initDayStats() {
   polarChart = new PolarChart(database);
+  dayGraph = new DayGraph(database);
   polarChartInstance = new Chart(polarChartCanvas, polarChart.getConfig());
   polarChart.onUpdate = (config) => {
     polarChartInstance.destroy();
     polarChartInstance = new Chart(polarChartCanvas, config);
+  };
+  dayGraph.onUpdate = function (data) {
+    updateDayScore(data);
   };
 }
 
@@ -130,7 +125,8 @@ function initHandlers() {
     overallChart.resetZoom();
   };
   calendar.onSelected = (idx) => {
-    polarChart.update(idx.toLocaleDateString());
+    polarChart.update(idx.toLocaleDateString(), palette);
+    dayGraph.update(idx.toLocaleDateString(), palette);
   };
 }
 
@@ -147,4 +143,49 @@ function createDay(day, selected) {
     });
   }
   return label;
+}
+
+function updateDayScore(data) {
+  dayData.innerHTML = "";
+  data.data.forEach((item) => {
+    dayData.innerHTML += getScoreItem(item);
+  });
+  dayTotalData.innerHTML = getTotalScore(data.total);
+}
+
+function getScoreItem(item) {
+  console.log(item);
+  var dayScoreItem = `
+  <label class="time-lable">
+  <label>
+      ${item.subject} ${item.amount.start} - ${item.amount.end} | ${
+    item.amount.dist
+  }
+      <ul>
+          ${item.diverts
+            .map(
+              (el) =>
+                (el = `<li>divert: ${el.start}-${el.end} | ${el.dist}</li>`)
+            )
+            .join("")}
+      </ul>
+      Rest: ${item.rest.start} - ${item.rest.end} | ${item.rest.dist}
+  </label>
+  </label>`;
+  console.log(dayScoreItem);
+  return dayScoreItem;
+}
+
+function getTotalScore(total) {
+  var timeZoneOffset = new Date().getTimezoneOffset() * 60000;
+  return `
+  <li>Task: ${new Date(
+    total.task + timeZoneOffset
+  ).toLocaleTimeString()}</li> 
+  <li>Rest: ${new Date(
+    total.rest + timeZoneOffset
+  ).toLocaleTimeString()}</li> 
+  <li>Divert: ${new Date(
+    total.divert + timeZoneOffset
+  ).toLocaleTimeString()}</li> `;
 }

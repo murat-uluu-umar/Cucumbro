@@ -21,7 +21,7 @@ class PolarChart {
       },
     };
   }
-  update(day) {
+  update(day, palette) {
     this.database.openDataBase((store) => {
       if (day !== null) {
         var request = store.index("Days-Tasks").getAll([day, "task"]);
@@ -34,11 +34,7 @@ class PolarChart {
               datasets: [
                 {
                   data: Object.values(data),
-                  backgroundColor: palette("tol", Object.keys(data).length).map(
-                    function (hex) {
-                      return "#" + hex;
-                    }
-                  )
+                  backgroundColor: palette
                 },
               ],
             },

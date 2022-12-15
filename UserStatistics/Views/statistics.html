@@ -41,14 +41,25 @@
             </div>
         </div>
         <div id="overall-stats" class="panel">
-            <div id="overall-options"><button id="reset_zoom">Reset zoom</button></div>
-            <canvas id="overall_graph"></canvas>
+            <canvas id="overall_graph" class="display"></canvas>
         </div>
         <div id="stats" class="panel">
-            <div id="polar-chart-div"><canvas id="polar_chart"></canvas></div>
-            <div id="day"></div>
+            <div id="day-info-div" class="display">
+                <label id="day-score-title"> Day info: </label>
+                <div id="day-data">
+                </div>
+                <ul id="overall-day-score" valign="bottom">
+                    <li>Task: 00:00:00</li>
+                    <li>Rest: 00:00:00</li>
+                    <li>Divert: 00:00:00</li>
+                </ul>
+            </div>
+            <div id="polar-chart-div" class="display"><canvas id="polar_chart"></canvas></div>
         </div>
-        <div id="options" class="panel">Options</div>
+        <div id="options" class="controll">
+            <label> Control </label>
+            <button id="reset_zoom">Reset zoom</button>
+        </div>
     </div>
     <script src="/UserStatistics/Libs/chartColors.js"></script>
     <script src="/UserStatistics/Models/calendar.js"></script>
@@ -58,6 +69,7 @@
     <script src="/UserStatistics/Models/database.js"></script>
     <script src="/UserStatistics/Models/overallGraph.js"></script>
     <script src="/UserStatistics/Models/polarChart.js"></script>
+    <script src="/UserStatistics/Models/dayGraph.js"></script>
 </body>
 
 </html>
