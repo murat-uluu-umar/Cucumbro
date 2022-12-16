@@ -7,6 +7,7 @@ var resetZoomBtn = document.getElementById("reset_zoom");
 var polarChartCanvas = document.getElementById("polar_chart");
 var dayData = document.getElementById("day-data");
 var dayTotalData = document.getElementById("overall-day-score");
+var dtpChartCanvas = document.getElementById("dtp_chart")
 
 var calendar = null;
 var database = null;
@@ -15,6 +16,8 @@ var overallChart = null;
 var polarChart = null;
 var polarChartInstance = null;
 var dayGraph = null;
+var dtpChart = null;
+var dtpChartInstance = null;
 
 var palette = palette("cb-PuOr", 8).map(function (hex) {
   return "#" + hex;
@@ -55,6 +58,8 @@ function initOverallGraph(data) {
 function initDayStats() {
   polarChart = new PolarChart(database);
   dayGraph = new DayGraph(database);
+  dtpChart = new DtpChart(database);
+  dtpChartInstance = new Chart(dtpChartCanvas, dtpChart.getConfig())
   polarChartInstance = new Chart(polarChartCanvas, polarChart.getConfig());
   polarChart.onUpdate = (config) => {
     polarChartInstance.destroy();
@@ -63,6 +68,10 @@ function initDayStats() {
   dayGraph.onUpdate = function (data) {
     updateDayScore(data);
   };
+  dtpChart.onUpdate = function (config) {
+    dtpChartInstance.destroy();
+    dtpChartInstance = new Chart(dtpChartCanvas, config);
+  }
 }
 
 function initDataBase() {
@@ -137,6 +146,7 @@ function updateDayScore(data) {
     dayData.innerHTML += getScoreItem(item);
   });
   dayTotalData.innerHTML = getTotalScore(data.total);
+  dtpChart.update(data.total)
 }
 
 function getScoreItem(item) {
