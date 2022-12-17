@@ -36,7 +36,6 @@ class Calendar {
   }
   initHightlightDays(data) {
     data.forEach(element => {
-      console.log(element);
       this.hightlighted[element.day] = true;      
     });
   }

@@ -56,19 +56,22 @@ class DataBase {
       var day = result[i].day;
       days.push(day);
       while (i < result.length && day === result[i].day) {
-        var subj = result[i].subject;
-        var piece = {
-          start: result[i].amount.start,
-          dist: result[i].amount.dist,
-        };
-        var type = result[i].type;
-        data[type] = typeof data[type] === "object" ? data[type] : [];
-        data[type][subj] =
-          typeof data[type][subj] === "object" ? data[type][subj] : [];
-        data[type][subj].push(piece);
+        if (result[i].type == "task") {
+          var subj = result[i].subject;
+          var piece = {
+            start: result[i].amount.start,
+            dist: result[i].amount.dist,
+          };
+          data[subj] =
+            typeof data[subj] === "object" ? data[subj] : [];
+          data[subj].push(piece);
+        }
         i++;
       }
     }
     return data;
+  }
+  randomDataSet() {
+    
   }
 }

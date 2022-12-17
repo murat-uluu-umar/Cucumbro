@@ -4,10 +4,11 @@ var forwardBtn = document.getElementById("forward_btn");
 var backwardBtn = document.getElementById("backward_btn");
 var overallGraphCanvas = document.getElementById("overall_graph");
 var resetZoomBtn = document.getElementById("reset_zoom");
+var exportCSVBtn = document.getElementById("export_database");
 var polarChartCanvas = document.getElementById("polar_chart");
 var dayData = document.getElementById("day-data");
 var dayTotalData = document.getElementById("overall-day-score");
-var dtpChartCanvas = document.getElementById("dtp_chart")
+var dtpChartCanvas = document.getElementById("dtp_chart");
 
 var calendar = null;
 var database = null;
@@ -38,10 +39,10 @@ function intiCalendar() {
 function initOverallGraph(data) {
   overallGraph = new OverallGraph();
   var dataSets = [];
-  Object.keys(data["task"]).forEach((element, idx) => {
+  Object.keys(data).forEach((element, idx) => {
     var item = {
       label: element,
-      data: Object.values(data.task)[idx],
+      data: Object.values(data)[idx],
       tension: 0.1,
       backgroundColor: palette,
     };
@@ -59,7 +60,7 @@ function initDayStats() {
   polarChart = new PolarChart(database);
   dayGraph = new DayGraph(database);
   dtpChart = new DtpChart(database);
-  dtpChartInstance = new Chart(dtpChartCanvas, dtpChart.getConfig())
+  dtpChartInstance = new Chart(dtpChartCanvas, dtpChart.getConfig());
   polarChartInstance = new Chart(polarChartCanvas, polarChart.getConfig());
   polarChart.onUpdate = (config) => {
     polarChartInstance.destroy();
@@ -71,7 +72,7 @@ function initDayStats() {
   dtpChart.onUpdate = function (config) {
     dtpChartInstance.destroy();
     dtpChartInstance = new Chart(dtpChartCanvas, config);
-  }
+  };
 }
 
 function initDataBase() {
@@ -122,6 +123,9 @@ function initHandlers() {
     polarChart.update(idx.toLocaleDateString(), palette);
     dayGraph.update(idx.toLocaleDateString(), palette);
   };
+  exportCSVBtn.onclick = () => {
+    exportCsv();
+  };
 }
 
 function createDay(day, selected) {
@@ -130,7 +134,8 @@ function createDay(day, selected) {
     if (selected)
       label.id = selected.getTime() !== day.getTime() ? "day" : "day-selected";
     else label.id = "day";
-    if (calendar.hightlighted[day.toLocaleDateString()]) label.className = "hightlighted";
+    if (calendar.hightlighted[day.toLocaleDateString()])
+      label.className = "hightlighted";
     label.innerHTML = day.getDate();
     label.addEventListener("click", function (event) {
       calendar.select(event.target.innerHTML - 1);
@@ -146,7 +151,7 @@ function updateDayScore(data) {
     dayData.innerHTML += getScoreItem(item);
   });
   dayTotalData.innerHTML = getTotalScore(data.total);
-  dtpChart.update(data.total)
+  dtpChart.update(data.total);
 }
 
 function getScoreItem(item) {
@@ -178,4 +183,64 @@ function getTotalScore(total) {
   <li>Divert: ${new Date(
     total.divert + timeZoneOffset
   ).toLocaleTimeString()}</li> `;
+}
+
+function exportCsv() {
+  database.openDataBase((store) => {
+    var allRecords = store.index("Tasks").getAll(["task"]);
+    var data = "Day,";
+    var subjects = {};
+    allRecords.onsuccess = function (event) {
+      var orderedData = {};
+      var sbIter = 0;
+      event.target.result.forEach((item) => {
+        if (typeof subjects[item.subject] !== "number") {
+          subjects[item.subject] = sbIter;
+          sbIter++;
+        }
+        orderedData[item.day] =
+          typeof orderedData[item.day] !== "object"
+            ? {}
+            : orderedData[item.day];
+        orderedData[item.day][subjects[item.subject]] =
+          typeof orderedData[item.day][subjects[item.subject]] !== "number"
+            ? 0
+            : orderedData[item.day][subjects[item.subject]];
+        var o = orderedData[item.day][subjects[item.subject]];
+        o = o + item.amount.dist;
+        orderedData[item.day][subjects[item.subject]] = o;
+      });
+      data += Object.keys(subjects).join(",") + ",";
+      Object.keys(orderedData).forEach((day) => {
+        var line = day + ",";
+        Object.values(subjects).forEach((subject) => {
+          var subj =
+            typeof orderedData[day][subject] === "number"
+              ? orderedData[day][subject]
+              : 0;
+          line += subj + ",";
+        });
+        data += "\n" + line;
+      });
+      
+    };
+  });
+}
+
+function downloadFile(data, fileName) {
+  var pom = document.createElement("a");
+  var blob = new Blob([data], { type: "text/csv;charset=utf-8;" });
+  var url = URL.createObjectURL(blob);
+  pom.href = url;
+  pom.setAttribute("download", fileName);
+  pom.click();
+}
+
+function getExcelDate(milliseconds) {
+  var date = new Date(milliseconds);
+  return (
+    25569.0 +
+    (date.getTime() - date.getTimezoneOffset() * 60 * 1000) /
+      (1000 * 60 * 60 * 24)
+  );
 }
