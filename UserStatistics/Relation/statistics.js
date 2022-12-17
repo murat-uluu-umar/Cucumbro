@@ -139,8 +139,22 @@ function initHandlers() {
     reader.readAsText(file);
 
     reader.onload = () => {
-      if(confirm("Firstly your data will be vanished, and after imported. Are you sure?")) importJson(reader.result);
+      if (
+        confirm(
+          "Firstly your data will be vanished, and after imported. Are you sure?"
+        )
+      )
+        importJson(reader.result);
     };
+  };
+  document.getElementById("clear_data").onclick = () => {
+    if (
+      prompt(
+        "Data will be exposed to genocide! \n Are you sure: Yes/no",
+        "no"
+      ).toLowerCase() === "yes"
+    )
+      clearDataBase();
   };
 }
 
@@ -210,6 +224,10 @@ function exportCsv() {
     allRecords.onsuccess = function (event) {
       var orderedData = {};
       var sbIter = 0;
+      if (Object.values(event.target.result).length == 0) {
+        alert("There is no data to export!");
+        return;
+      }
       event.target.result.forEach((item) => {
         if (typeof subjects[item.subject] !== "number") {
           subjects[item.subject] = sbIter;
@@ -270,7 +288,13 @@ function exportJson() {
         if (err) {
           console.error(err);
         } else {
+          var obj = JSON.parse(jsonString);
+          if (obj["DAYSDATA"].length == 0) {
+            alert("There is no data to export!");
+            return;
+          }
           downloadFile(jsonString, "WarptimerDB", "application/json");
+          window.location.reload();
         }
       });
     }
@@ -278,17 +302,36 @@ function exportJson() {
 }
 
 function importJson(jsonString) {
-  console.log(jsonString);
   database.openDataBase(
     (store) => {},
     (idb) => {
-      clearDatabase(idb, function(err) {
+      clearDatabase(idb, function (err) {
         if (!err) {
-          importFromJsonString(idb, jsonString, function(err) {
+          var obj = JSON.parse(jsonString);
+          if (obj["DAYSDATA"].length == 0) {
+            alert("There is no data to export!");
+            return;
+          }
+          importFromJsonString(idb, jsonString, function (err) {
             if (!err) {
-              alert("Successfully imported!")
+              alert("Successfully imported!");
+              window.location.reload();
             }
           });
+        }
+      });
+    }
+  );
+}
+
+function clearDataBase() {
+  database.openDataBase(
+    (store) => {},
+    (idb) => {
+      clearDatabase(idb, function (err) {
+        if (!err) {
+          alert("Successfully cleared!");
+          window.location.reload();
         }
       });
     }
