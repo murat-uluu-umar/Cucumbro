@@ -62,8 +62,7 @@ class DataBase {
             start: result[i].amount.start,
             dist: result[i].amount.dist,
           };
-          data[subj] =
-            typeof data[subj] === "object" ? data[subj] : [];
+          data[subj] = typeof data[subj] === "object" ? data[subj] : [];
           data[subj].push(piece);
         }
         i++;
@@ -71,7 +70,37 @@ class DataBase {
     }
     return data;
   }
-  randomDataSet() {
-    
+  randomDataSet(days, store) {
+    var subjects = [
+      "English",
+      "Programming",
+      "Art",
+      "Physics",
+      "Math",
+      "Data Sciense",
+      "Game Dev",
+      "Chemistry",
+      "Biology",
+      "Literature",
+    ];
+    for (let i = 0; i <= days; i++) {
+      for (let j = 0; j < Math.floor(Math.random() * i); j++) {
+        var start =
+          new Date(Date.now() + i * 86400000).getTime() +
+          ((57600000 + Math.floor(Math.random() * 57600000)) % 57600000);
+        var end = start + Math.floor(Math.random() * 14400000);
+        var item = {
+          day: new Date(Date.now() + i * 86400000).toLocaleDateString(),
+          type: ["task", "divert", "rest"][Math.floor(Math.random() * 3)],
+          subject: subjects[Math.floor(Math.random() * 10)],
+          amount: {
+            start: start,
+            end: end,
+            dist: end - start,
+          },
+        };
+        store.put(item);
+      }
+    }
   }
 }

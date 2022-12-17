@@ -122,6 +122,7 @@ function initHandlers() {
   calendar.onSelected = (idx) => {
     polarChart.update(idx.toLocaleDateString(), palette);
     dayGraph.update(idx.toLocaleDateString(), palette);
+    console.log(idx);
   };
   exportCSVBtn.onclick = () => {
     exportCsv();
@@ -147,6 +148,7 @@ function createDay(day, selected) {
 
 function updateDayScore(data) {
   dayData.innerHTML = "";
+  console.log(data);
   data.data.forEach((item) => {
     dayData.innerHTML += getScoreItem(item);
   });
@@ -207,7 +209,7 @@ function exportCsv() {
             ? 0
             : orderedData[item.day][subjects[item.subject]];
         var o = orderedData[item.day][subjects[item.subject]];
-        o = o + item.amount.dist;
+        o = o + getExcelDate(item.amount.dist);
         orderedData[item.day][subjects[item.subject]] = o;
       });
       data += Object.keys(subjects).join(",") + ",";
@@ -222,7 +224,7 @@ function exportCsv() {
         });
         data += "\n" + line;
       });
-      
+      downloadFile(data, "WarptimerDB");
     };
   });
 }
