@@ -19,12 +19,6 @@ class OverallGraph {
               unit: "day"
             },
           },
-          y: {
-            type: "time",
-            time: {
-              unit: "minute"
-            },
-          },
         },
         radius: 7,
         plugins: {

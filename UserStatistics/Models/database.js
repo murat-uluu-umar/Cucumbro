@@ -60,7 +60,7 @@ class DataBase {
           var subj = result[i].subject;
           var piece = {
             start: result[i].amount.start,
-            dist: result[i].amount.dist,
+            dist: Math.floor(result[i].amount.dist / 60000),
           };
           data[subj] = typeof data[subj] === "object" ? data[subj] : [];
           data[subj].push(piece);

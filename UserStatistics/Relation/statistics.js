@@ -39,12 +39,14 @@ function intiCalendar() {
 function initOverallGraph(data) {
   overallGraph = new OverallGraph();
   var dataSets = [];
+  var paletteN = palette;
   Object.keys(data).forEach((element, idx) => {
     var item = {
       label: element,
       data: Object.values(data)[idx],
       tension: 0.1,
-      backgroundColor: palette,
+      backgroundColor: paletteN[dataSets.length % paletteN.length],
+      borderColor: paletteN[dataSets.length % paletteN.length]
     };
     dataSets.push(item);
   });
