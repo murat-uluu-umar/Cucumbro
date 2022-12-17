@@ -46,7 +46,7 @@ function initOverallGraph(data) {
       data: Object.values(data)[idx],
       tension: 0.1,
       backgroundColor: paletteN[dataSets.length % paletteN.length],
-      borderColor: paletteN[dataSets.length % paletteN.length]
+      borderColor: paletteN[dataSets.length % paletteN.length],
     };
     dataSets.push(item);
   });
@@ -127,7 +127,10 @@ function initHandlers() {
     console.log(idx);
   };
   exportCSVBtn.onclick = () => {
-    exportCsv();
+    if (confirm("Data will be exported as CSV")) exportCsv();
+  };
+  document.getElementById("export_json").onclick = () => {
+    if (confirm("Data will be exported as JSON")) exportJson();
   };
 }
 
@@ -226,14 +229,14 @@ function exportCsv() {
         });
         data += "\n" + line;
       });
-      downloadFile(data, "WarptimerDB");
+      downloadFile(data, "WarptimerDB", "text/csv");
     };
   });
 }
 
-function downloadFile(data, fileName) {
+function downloadFile(data, fileName, type) {
   var pom = document.createElement("a");
-  var blob = new Blob([data], { type: "text/csv;charset=utf-8;" });
+  var blob = new Blob([data], { type: `${type};charset=utf-8;` });
   var url = URL.createObjectURL(blob);
   pom.href = url;
   pom.setAttribute("download", fileName);
@@ -246,5 +249,20 @@ function getExcelDate(milliseconds) {
     25569.0 +
     (date.getTime() - date.getTimezoneOffset() * 60 * 1000) /
       (1000 * 60 * 60 * 24)
+  );
+}
+
+function exportJson() {
+  database.openDataBase(
+    (store) => {},
+    (idb) => {
+      exportToJsonString(idb, function (err, jsonString) {
+        if (err) {
+          console.error(err);
+        } else {
+          downloadFile(jsonString, "WarptimerDB", "application/json");
+        }
+      });
+    }
   );
 }

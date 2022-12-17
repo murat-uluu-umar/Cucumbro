@@ -4,12 +4,15 @@ const SUBJECTS = "SUBJECTS";
 const VERSION = 6;
 
 class DataBase {
-  constructor() {}
+  constructor() {
+    this.indexedDataBase = null;
+  }
 
-  openDataBase(callback) {
+  openDataBase(callback, idb = null) {
     var request = this.dataBase();
     request.onsuccess = function () {
       const db = request.result;
+      if (idb) idb(db)
 
       const transaction = db.transaction(DAYSDATA, "readwrite");
 

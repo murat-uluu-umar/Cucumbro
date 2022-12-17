@@ -243,7 +243,6 @@ button:active {
 }
 
 .controll button {
-    margin: 10px;
     font-size: large;
     font-family: "pixel_font";
     background-color: rgb(102, 139, 160);
@@ -251,10 +250,11 @@ button:active {
     border-style: outset;
     border-color: rgb(115, 156, 180);
     border-radius: 0%;
+    width: 90%;
+    margin-top: 10px;
 }
 
 .controll button:active {
-    margin: 10px;
     font-size: large;
     font-family: "pixel_font";
     background-color: rgb(74, 101, 117);
