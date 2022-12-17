@@ -132,6 +132,16 @@ function initHandlers() {
   document.getElementById("export_json").onclick = () => {
     if (confirm("Data will be exported as JSON")) exportJson();
   };
+  document.getElementById("import_json").onchange = (event) => {
+    var file = event.target.files[0];
+
+    var reader = new FileReader();
+    reader.readAsText(file);
+
+    reader.onload = () => {
+      if(confirm("Firstly your data will be vanished, and after imported. Are you sure?")) importJson(reader.result);
+    };
+  };
 }
 
 function createDay(day, selected) {
@@ -261,6 +271,24 @@ function exportJson() {
           console.error(err);
         } else {
           downloadFile(jsonString, "WarptimerDB", "application/json");
+        }
+      });
+    }
+  );
+}
+
+function importJson(jsonString) {
+  console.log(jsonString);
+  database.openDataBase(
+    (store) => {},
+    (idb) => {
+      clearDatabase(idb, function(err) {
+        if (!err) {
+          importFromJsonString(idb, jsonString, function(err) {
+            if (!err) {
+              alert("Successfully imported!")
+            }
+          });
         }
       });
     }

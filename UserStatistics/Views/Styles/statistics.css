@@ -268,3 +268,26 @@ button:active {
 .hightlighted {
     text-decoration: underline;
 }
+
+#import-json-label {
+    font-size: large;
+    font-family: "pixel_font";
+    background-color: rgb(102, 139, 160);
+    border: thick;
+    border-style: outset;
+    border-color: rgb(115, 156, 180);
+    border-radius: 0%;
+    width: 90%;
+    margin-top: 10px;
+}
+
+#import-json-label:active {
+    font-size: large;
+    font-family: "pixel_font";
+    background-color: rgb(74, 101, 117);
+    border: thick;
+    border-style: inset;
+    border-color: rgb(115, 156, 180);
+    border-radius: 0%;
+    color: darkgray;
+}
