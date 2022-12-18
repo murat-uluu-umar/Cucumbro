@@ -20,7 +20,7 @@ var dayGraph = null;
 var dtpChart = null;
 var dtpChartInstance = null;
 
-var palette = palette("cb-PuOr", 8).map(function (hex) {
+var palette = palette("cb-Set1", 8).map(function (hex) {
   return "#" + hex;
 });
 
@@ -50,7 +50,7 @@ function initOverallGraph(data) {
     };
     dataSets.push(item);
   });
-  Chart.defaults.color = "yellowgreen";
+  Chart.defaults.color = "#e6c177";
   Chart.defaults.font.family = "pixel_font";
   overallChart = new Chart(
     overallGraphCanvas,
@@ -156,6 +156,15 @@ function initHandlers() {
     )
       clearDataBase();
   };
+  document.getElementById("import_json_button").onclick = () =>
+    document.getElementById("import_json").click();
+  Array.prototype.slice
+    .call(document.getElementsByClassName("switch-view"))
+    .map((elem) => {
+      elem.onclick = () => {
+        document.getElementById("box").classList.toggle("is-flipped");
+      };
+    });
 }
 
 function createDay(day, selected) {
@@ -305,13 +314,13 @@ function importJson(jsonString) {
   database.openDataBase(
     (store) => {},
     (idb) => {
+      var obj = JSON.parse(jsonString);
+      if (obj["DAYSDATA"].length == 0) {
+        alert("There is no data to export!");
+        return;
+      }
       clearDatabase(idb, function (err) {
         if (!err) {
-          var obj = JSON.parse(jsonString);
-          if (obj["DAYSDATA"].length == 0) {
-            alert("There is no data to export!");
-            return;
-          }
           importFromJsonString(idb, jsonString, function (err) {
             if (!err) {
               alert("Successfully imported!");

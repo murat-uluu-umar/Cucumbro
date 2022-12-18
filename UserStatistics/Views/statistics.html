@@ -20,54 +20,73 @@
 </head>
 
 <body>
-    <div class="container">
-        <div id="header" class="panel">Header</div>
-        <div id="calendar" class="panel">
-            <div id="calendar_toolbar">
-                <button id="backward_btn"> <i class="fas fa-caret-left"></i> </button>
-                <label id="calendar_title">December</label>
-                <button id="forward_btn"> <i class="fas fa-caret-right"></i> </button>
-            </div>
-            <div id="days">
-                <label>Su</label>
-                <label>Mn</label>
-                <label>Th</label>
-                <label>Wn</label>
-                <label>Tu</label>
-                <label>Fr</label>
-                <label>St</label>
-            </div>
-            <div id="items">
-            </div>
-        </div>
-        <div id="overall-stats" class="panel">
-            <canvas id="overall_graph" class="display"></canvas>
-        </div>
-        <div id="stats" class="panel">
-            <div id="day-info-div" class="display">
-                <label id="day-score-title"> Day info: </label>
-                <div id="day-data">
+    <div id="box">
+        <div id="switch-apart">
+            <div id="day_panel" class="panel">
+                <div id="tools-panel">
+                    <div id="calendar">
+                        <div id="calendar_toolbar">
+                            <button id="backward_btn"> <i class="fas fa-caret-left"></i> </button>
+                            <label id="calendar_title">December</label>
+                            <button id="forward_btn"> <i class="fas fa-caret-right"></i> </button>
+                        </div>
+                        <div id="days">
+                            <label>Su</label>
+                            <label>Mn</label>
+                            <label>Th</label>
+                            <label>Wn</label>
+                            <label>Tu</label>
+                            <label>Fr</label>
+                            <label>St</label>
+                        </div>
+                        <div id="items"></div>
+                    </div>
+                    <div id="polar-charts-panel">
+                        <div id="polar-chart-div" class="display"><canvas id="polar_chart"></canvas></div>
+                        <div id="dtp-chart-div" class="display"><canvas id="dtp_chart"></canvas></div>
+                    </div>
                 </div>
-                <ul id="overall-day-score" valign="bottom">
-                    <li>Task: 00:00:00</li>
-                    <li>Rest: 00:00:00</li>
-                    <li>Divert: 00:00:00</li>
-                </ul>
+                <div id="stats">
+                    <div id="day-info-div" class="display">
+                        <label id="day-score-title"> Day info: </label>
+                        <div id="day-data">
+                        </div>
+                        <ul id="overall-day-score" valign="bottom">
+                            <li>Task: 00:00:00</li>
+                            <li>Rest: 00:00:00</li>
+                            <li>Divert: 00:00:00</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div id="polar-charts-panel">
-                <div id="polar-chart-div" class="display"><canvas id="polar_chart"></canvas></div>
-                <div id="dtp-chart-div" class="display"><canvas id="dtp_chart"></canvas></div>
+            <div class="switch-view">
+                <i class="fas fa-caret-right"></i>
+                <h1>switch</h1>
+                <i class="fas fa-caret-right"></i>
             </div>
         </div>
-        <div id="options" class="controll">
-            <label> Control </label>
-            <button id="reset_zoom">Reset zoom</button>
-            <button id="export_database">Export CSV</button>
-            <label for="import_json" id="import-json-label">Import JSON</label>
-            <button id="export_json">Export JSON</button>
-            <button id="clear_data">Clear Data</button>
-            <input type="file" id="import_json" accept=".json" hidden>
+        <div id="switch-apart-back">
+            <div id="overall_panel">
+                <div id="overall-stats" class="panel">
+                    <div id="options" class="panel">
+                        <label> Control </label>
+                        <button id="reset_zoom">Reset zoom</button>
+                        <button id="export_database">Export CSV</button>
+                        <button id="import_json_button">Import JSON</button>
+                        <button id="export_json">Export JSON</button>
+                        <button id="clear_data">Clear Data</button>
+                        <input type="file" id="import_json" accept=".json" hidden>
+                    </div>
+                    <canvas id="overall_graph" class="display"></canvas>
+                </div>
+            </div>
+            <div class="switch-view">
+                <i class="fas fa-caret-right"></i>
+                <h1>switch</h1>
+                <i class="fas fa-caret-right"></i>
+            </div>
         </div>
+    </div>
     </div>
     <script src="/UserStatistics/Libs/chartColors.js"></script>
     <script src="/UserStatistics/Models/calendar.js"></script>
