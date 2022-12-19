@@ -33,8 +33,22 @@ function sound() {
   }
   chrome.storage.local.get(["dayTasks"]).then((result) => {
     new DataBase().openDataBase((store) => {
-      console.log(result.dayTasks);
-      result.dayTasks.map((obj) => {store.put(obj)})
+      var data = {
+        task: 0,
+        divert: 0,
+        rest: 0,
+      };
+      var subject = "";
+      result.dayTasks.map((obj) => {
+        data[obj.type] += obj.amount.dist;
+        subject = obj.subject;
+      });
+      statsText.innerHTML = `${subject}: ${getTime(data.task)} Rest: ${getTime(
+        data.rest
+      )} Diverts: ${getTime(data.divert)}`;
+      result.dayTasks.map((obj) => {
+        store.put(obj);
+      });
       chrome.storage.local.set({ dayTasks: [] });
     });
   });
@@ -42,4 +56,9 @@ function sound() {
 
 function randomText() {
   return words[Math.floor(Math.random() * words.length)];
+}
+
+function getTime(millis) {
+  var timeZoneOffset = new Date().getTimezoneOffset() * 60000;
+  return new Date(millis + timeZoneOffset).toLocaleTimeString();
 }

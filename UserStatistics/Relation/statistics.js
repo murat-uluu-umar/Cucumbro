@@ -20,7 +20,7 @@ var dayGraph = null;
 var dtpChart = null;
 var dtpChartInstance = null;
 
-var palette = palette("cb-Set1", 8).map(function (hex) {
+var palette = palette("sol-accent", 8).map(function (hex) {
   return "#" + hex;
 });
 
@@ -186,7 +186,6 @@ function createDay(day, selected) {
 
 function updateDayScore(data) {
   dayData.innerHTML = "";
-  console.log(data);
   data.data.forEach((item) => {
     dayData.innerHTML += getScoreItem(item);
   });

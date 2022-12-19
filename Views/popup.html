@@ -20,8 +20,8 @@
   <div class="container" id="start">
     <p id="type"><img src="/Resources/Icon/clock.png" alt=""></p>
     <div>
-      <input type="text" list="tasks" placeholder="NEW TASK" id="new_task_input"/>
-      <datalist id="tasks"/>
+      <input type="text" list="tasks" placeholder="NEW TASK" id="new_task_input" />
+      <datalist id="tasks" />
     </div>
     <div>
       <button id="startBtn"><i class="fas fa-play fa-xs"></i> Start</button>
@@ -30,21 +30,25 @@
   <div class="container" id="stopwatch">
     <p>
     <div class="stopwatch" id="stopwatch_clock"></div>
-    <div class="stopwatch_text" id="stopwatch_text"><span id="tens">00</span>:<span id="seconds">00</span></div>
+    <div id="stopwatch_text_div">
+      <span class="stopwatch_text" id="stopwatch_text">00:00:00</span>
+    </div>
     </p>
-    <div>
+    <div id="button-bar">
       <button id="divertBtn"><i class="fas fa-pause"></i>Divert</button>
       <button id="restBtn"><i class="fas fa-stop"></i> Rest</button>
     </div>
   </div>
   <div class="container" id="countdown">
-    <p>
-    <div class="countdown"></div> <span id="mins">00</span>:<span id="secs">00</span></p>
+    <div class="countdown"></div>
+    <div id="countdown_text_div"><span id="countdown_text">00:00:00</span>
+    </div>
     <div>
-      <button id="skipBtn"><i class="fas fa-forward fa-xs"></i> Skip</button>
+      <button id="skip_btn"><i class="fas fa-forward fa-xs"></i> Skip</button>
     </div>
   </div>
   <script src="../Scripts/popup.js"></script>
+  <button id="stats_btn"><i class="fas fa-chart-pie fa-xs"></i> Charts</button>
 </body>
 
 </html>

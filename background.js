@@ -48,6 +48,7 @@ function stopwatchStart() {
 function stopwatchEnd() {
   chrome.notifications.clear(PAUSEWIN);
   chrome.storage.sync.set({ divert: false });
+  chrome.storage.sync.set({ countdownStart: Date.now() });
 }
 
 function getDistance(scheduledTime, divertSummTime) {
@@ -65,9 +66,10 @@ function countdownInit() {
   chrome.alarms.get(ALARM, (alarm) => {
     if (alarm !== undefined) {
       var distance = alarm.scheduledTime - Date.now();
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-      var result = { minutes: minutes, seconds: seconds };
+      var result = { hours: hours, minutes: minutes, seconds: seconds };
       chrome.runtime.sendMessage({ msg: "tick", value: result });
     }
   });
@@ -126,6 +128,11 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       if (request.value) divert();
       break;
     case "skipCountdown":
+      chrome.storage.sync.get(["countdownStart"]).then((result) => {
+        if (result.countdownStart !== null)
+          addDataObject("rest", result.countdownStart, Date.now());
+        chrome.storage.sync.set({ countdownStart: null });
+      });
       countdownEnd();
       break;
   }
@@ -133,7 +140,11 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 // alarm
 chrome.alarms.onAlarm.addListener((alarm) => {
-  addDataObject("rest", Date.now() - restTime * 6000, alarm.scheduledTime);
+  chrome.storage.sync.get(["countdownStart"]).then((result) => {
+    if (result.countdownStart !== null)
+      addDataObject("rest", result.countdownStart, alarm.scheduledTime);
+    chrome.storage.sync.set({ countdownStart: null });
+  });
   countdownEnd();
   ringed = true;
 });
@@ -167,7 +178,7 @@ function pauseWindow() {
     iconUrl: "Resources/Icon/clock.png",
     title: "Warptimer",
     type: "basic",
-    message: "Warptimer paused!",
+    message: "Stopwatch paused!",
     priority: 2,
     requireInteraction: true,
   });
@@ -184,7 +195,6 @@ function setBadge(text, color) {
 }
 
 function addDataObject(type, start, end) {
-  console.log(type);
   chrome.storage.local.get(["subject"]).then((result) => {
     console.log(result.subject);
     if (result.subject !== "") {

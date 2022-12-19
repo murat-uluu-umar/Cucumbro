@@ -9,8 +9,9 @@
 }
 
 body {
-    background: rgb(32, 34, 56);
-    background: radial-gradient(circle, rgba(32, 34, 56, 1) 2%, rgba(7, 8, 14, 1) 79%);
+    background: url("/Resources/bricks.png");
+    background-size: 80px;
+    background-repeat: repeat;
     display: flex;
     flex-direction: row;
     align-items: stretch;
@@ -20,19 +21,19 @@ body {
 }
 
 button {
-    background-color: #8EA08C;
+    background-color: #EC9428;
     font-family: "pixel_font";
     font-size: large;
     border: 3px;
     border-style: outset;
-    border-color: #a4b9a1;
+    border-color: #f8a642;
     color: #202238;
     margin: 10px;
     cursor: pointer;
 }
 
 button:active {
-    background-color: rgb(87, 87, 87);
+    background-color: #cc8022;
     border-style: groove;
 }
 
@@ -236,7 +237,7 @@ button:active {
 }
 
 #day-selected {
-    background-color: rgb(68, 68, 68);
+    background-color: #14233e;
     color: bisque;
     font-size: normal;
     border: 3px;
@@ -257,16 +258,16 @@ button:active {
 }
 
 #polar-chart-div {
-    max-width: 180px;
-    max-height: 180px;
+    width: 140px;
+    height: 140px;
     border-radius: 5%;
     border-style: groove;
 }
 
 #dtp-chart-div {
+    width: 140px;
+    height: 140px;
     margin-top: 10px;
-    max-width: 180px;
-    max-height: 180px;
     border-radius: 5%;
     border-style: groove;
 }
@@ -286,6 +287,10 @@ button:active {
 
 #polar-charts-panel {
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
 }
 
 #tools-panel {
@@ -328,26 +333,25 @@ button:active {
     background-image: url("/Resources/grid.png");
     background-size: 10px;
     background-repeat: repeat;
-    background-color: #273149;
+    background-color: #007580;
     border: thick;
     border-style: inset;
-    border-color: #484a6e;
+    border-color: #3C4F65;
     border-radius: 15px;
     display: block;
     margin-bottom: 2%;
-    color: #e6c177;
-    text-shadow: 0 0 5px #ffa500, 0 0 15px #ff7b00;
+    color: #EC9428;
     padding: 10px;
     text-align: left;
 }
-  
+
 
 .hightlighted {
     text-decoration: underline;
-    background-color: #8EA08C;
-    border: thin;
-    border-color: #a8bba6;
+    background-color: #EC9428;
+    border: thick;
     border-style: outset;
+    border-color: #EC9428;
     color: #202238;
 }
 
@@ -355,10 +359,10 @@ button:active {
     padding: 10px;
     text-align: center;
     border: 5px;
-    border-color: #292b42;
+    border-color: #3C4F65;
     border-style: ridge;
     border-radius: 10px;
-    background-color: #202238;
+    background-color: #14233e;
     /* box-shadow: 5px 5px #242424; */
 }
 
@@ -371,9 +375,9 @@ button:active {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #a5baf3;
+    background: #EC9428;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #73a5e7;
+    background: #cc8022;
 }

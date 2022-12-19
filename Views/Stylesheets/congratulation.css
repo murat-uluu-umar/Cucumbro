@@ -2,10 +2,14 @@ body {
     background-image: url("../../Resources/bricks.png");
     background-size: 50px;
     background-repeat: repeat;
+    border: thick;
+    border-style: ridge;
+    border-color: #3E3255;
     justify-content: center;
     padding: 10%;
     scroll-behavior: unset;
     display: flexbox;
+    overflow: hidden;
 }
 
 .stopwatch {
@@ -28,13 +32,14 @@ body {
 }
 
 div {
-    background-image: url("../../Resources/grid.png");
+    background-image: url("/Resources/grid.png");
     background-size: 10px;
     background-repeat: repeat;
-    background-color: rgb(26, 91, 110);
+    background-color: #283954;
+    font-family: 'pixel_font';
     border: thick;
+    border-color: #344a6d;
     border-style: inset;
-    border-color: rgb(33, 141, 168);
     display: block;
     margin-bottom: 2%;
 }
@@ -44,29 +49,23 @@ p {
     font-size: large; 
     text-align: center;
     justify-content: center;
-    color: yellow;
-    text-shadow: 1.5px 1.5px darkorange;
+    color: #E8DD90;
+    padding: 2px;
+    margin-bottom: 5%;
 }
 
 h1 {
-    background-image: url("../../Resources/grid.png");
-    background-size: 10px;
-    background-repeat: repeat;
-    background-color: rgb(26, 91, 110);
-    font-family: 'pixel_font', sans-serif;
-    font-size: small; 
-    text-align: left;
-    border: thick;
-    border-style: inset;
-    border-color: rgb(33, 141, 168);
-    color: yellow;
-    text-shadow: 0.5px 0.5px darkorange;
-    padding: 1%;
-    display: inline-block;
+    text-align: center;
+    font-family: 'pixel_font';
+    font-size: small;
+    border-top: 2px #E8DD90 dashed;
+    color: #E8DD90;
+    padding-top: 15px;
+    margin: 15px;
 }
 
 button {
-    background: linear-gradient(180deg, rgba(223, 223, 223, 0.2923265925624914) 0%, rgba(255, 255, 255, 0.935) 30%, rgba(74, 74, 74, 0.0028529083519651666) 39%, rgba(45, 45, 45, 0.5730283469484563) 100%), rgb(236, 211, 20);
+    background: linear-gradient(180deg, rgba(223, 223, 223, 0.2923265925624914) 0%, rgba(255, 255, 255, 0.935) 30%, rgba(74, 74, 74, 0.0028529083519651666) 39%, rgba(45, 45, 45, 0.5730283469484563) 100%), #CA9668;
     color: black;
     border: medium;
     font-family: 'pixel_font';
@@ -80,7 +79,15 @@ button {
 }
 
 button:hover {
-    background: linear-gradient(180deg, rgba(223, 223, 223, 0.2923265925624914) 0%, rgb(232, 201, 44) 30%, rgba(74, 74, 74, 0.0028529083519651666) 39%, rgba(45, 45, 45, 0.5730283469484563) 100%), rgb(185, 165, 15);
+    background: linear-gradient(180deg, rgba(223, 223, 223, 0.2923265925624914) 0%, rgb(232, 201, 44) 30%, rgba(74, 74, 74, 0.0028529083519651666) 39%, rgba(45, 45, 45, 0.5730283469484563) 100%), #CA9668;
+    color: black;
+    border: medium;
+    border-color: rgb(60, 60, 60);
+    border-style: outset;
+}
+
+button:disabled {
+    background: linear-gradient(180deg, rgba(223, 223, 223, 0.2923265925624914) 0%, rgb(232, 201, 44) 30%, rgba(74, 74, 74, 0.0028529083519651666) 39%, rgba(45, 45, 45, 0.5730283469484563) 100%), #999999;
     color: black;
     border: medium;
     border-color: rgb(60, 60, 60);

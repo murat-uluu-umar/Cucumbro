@@ -12,17 +12,13 @@ var newTaskInput = document.getElementById("new_task_input");
 var tasksDataList = document.getElementById("tasks");
 
 // stopwatch
-var mins = document.getElementById("tens");
-var seconds = document.getElementById("seconds");
 var restBtn = document.getElementById("restBtn");
 var divertBtn = document.getElementById("divertBtn");
 var stopwatchClock = document.getElementById("stopwatch_clock");
 var stopwatchText = document.getElementById("stopwatch_text");
 
 // countdown
-var cmins = document.getElementById("mins");
-var cseconds = document.getElementById("secs");
-var skipBtn = document.getElementById("skipBtn");
+var skipBtn = document.getElementById("skip_btn");
 
 // objects
 const stopwatch = {
@@ -38,12 +34,16 @@ const stopwatch = {
                 result.scheduledTime,
                 result.divertSummTime
               );
+              var hours = Math.floor(
+                (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+              );
               var minutesMills = Math.floor(
                 (distance % (1000 * 60 * 60)) / (1000 * 60)
               );
               var secondsMills = Math.floor((distance % (1000 * 60)) / 1000);
-              mins.innerHTML = digits(minutesMills);
-              seconds.innerHTML = digits(secondsMills);
+              document.getElementById("stopwatch_text").innerHTML = `${digits(
+                hours
+              )}:${digits(minutesMills)}:${digits(secondsMills)}`;
             }
           });
       }, 1000);
@@ -51,8 +51,7 @@ const stopwatch = {
   end: () => {
     stopwatch.stop();
     chrome.runtime.sendMessage({ msg: "stopwatchEnd" });
-    mins.innerHTML = "00";
-    seconds.innerHTML = "00";
+    document.getElementById("stopwatch_text").innerHTML = "00:00:00";
   },
   stop() {
     if (stopwatch.interval !== null) {
@@ -69,13 +68,13 @@ const stopwatch = {
   },
   saveDigitsText() {
     chrome.storage.sync.set({
-      stopwatchDigitsText: [mins.innerHTML, seconds.innerHTML],
+      stopwatchDigitsText: document.getElementById("stopwatch_text").innerHTML,
     });
   },
   loadDigitsText() {
     chrome.storage.sync.get(["stopwatchDigitsText"]).then((result) => {
-      mins.innerHTML = result.stopwatchDigitsText[0];
-      seconds.innerHTML = result.stopwatchDigitsText[1];
+      document.getElementById("stopwatch_text").innerHTML =
+        result.stopwatchDigitsText;
     });
   },
 };
@@ -108,6 +107,9 @@ window.onblur = () => {
 };
 
 function updatePanel() {
+  document.getElementById("stats_btn").onclick = () => {
+    window.open("../UserStatistics/Views/statistics.html", "_blank").focus();
+  };
   chrome.storage.sync.get(["state"]).then((result) => {
     hideAll();
     switch (result.state) {
@@ -160,8 +162,9 @@ function digits(num) {
 }
 
 function updateDigits(time) {
-  cmins.innerHTML = digits(time.minutes);
-  cseconds.innerHTML = digits(time.seconds);
+  document.getElementById("countdown_text").innerHTML = `${digits(
+    time.hours
+  )}:${digits(time.minutes)}:${digits(time.seconds)}`;
 }
 
 async function changeState(state) {
@@ -195,6 +198,7 @@ function divertSwitchHandler() {
       stopwatchText.className = request.value
         ? "stopwatch_text_paused"
         : "stopwatch_text";
+      restBtn.disabled = request.value ? true : false;
     }
   });
 }
@@ -216,6 +220,7 @@ function updateDivertBtn() {
       stopwatchText.className = result.divert
         ? "stopwatch_text_paused"
         : "stopwatch_text";
+      restBtn.disabled = result.divert ? true : false;
     });
   });
 }
@@ -238,7 +243,7 @@ function addNewTask() {
     chrome.storage.local.get(["tasks"]).then((result) => {
       var tasks = result.tasks;
       tasks.push(newTaskInput.value);
-      tasks = [... new Set(tasks)];
+      tasks = [...new Set(tasks)];
       chrome.storage.local.set({ tasks: tasks });
     });
   }

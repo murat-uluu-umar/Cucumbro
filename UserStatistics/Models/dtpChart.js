@@ -16,10 +16,9 @@ class DtpChart {
       },
     };
   }
-  update(total, palette) {
+  update(total) {
     if (day !== null) {
       var data = this.prepare(total);
-      console.log(data);
       var config = {
         type: "polarArea",
         data: {
@@ -37,16 +36,16 @@ class DtpChart {
   }
 
   prepare(total) {
-    var otherTime = this.toHours(57600000 - total.task + total.rest + total.divert);
+    var otherTime = this.toMinutes(57600000 - total.task + total.rest + total.divert);
     return {
-      Tasks: this.toHours(total.task),
-      Rests: this.toHours(total.rest),
-      Diverts: this.toHours(total.divert),
+      Tasks: this.toMinutes(total.task),
+      Rests: this.toMinutes(total.rest),
+      Diverts: this.toMinutes(total.divert),
       Other: otherTime,
     };
   }
 
-  toHours(milliseconds) {
-    return Math.floor((milliseconds / (1000 * 60 * 60)) % 24)
+  toMinutes(milliseconds) {
+    return Math.floor(milliseconds / 60000)
   }
 }
