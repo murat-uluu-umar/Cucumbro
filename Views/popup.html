@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Warptimer</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="Stylesheets/popup.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
+  <style>
+    @font-face {
+      font-family: pixel_font;
+      src: url('../Resources/Font/pixel_font.TTF');
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="container" id="start">
+    <p id="type"><img src="/Resources/Icon/clock.png" alt=""></p>
+    <div>
+      <input type="text" list="tasks" placeholder="NEW TASK" id="new_task_input" />
+      <datalist id="tasks" />
+    </div>
+    <div>
+      <button id="startBtn"><i class="fas fa-play fa-xs"></i> Start</button>
+    </div>
+  </div>
+  <div class="container" id="stopwatch">
+    <p>
+    <div class="stopwatch" id="stopwatch_clock"></div>
+    <div id="stopwatch_text_div">
+      <span class="stopwatch_text" id="stopwatch_text">00:00:00</span>
+    </div>
+    </p>
+    <div id="button-bar">
+      <button id="divertBtn"><i class="fas fa-pause"></i>Divert</button>
+      <button id="restBtn"><i class="fas fa-stop"></i> Rest</button>
+    </div>
+  </div>
+  <div class="container" id="countdown">
+    <div class="countdown"></div>
+    <div id="countdown_text_div"><span id="countdown_text">00:00:00</span>
+    </div>
+    <div>
+      <button id="skip_btn"><i class="fas fa-forward fa-xs"></i> Skip</button>
+    </div>
+  </div>
+  <script src="../Scripts/popup.js"></script>
+  <button id="stats_btn"><i class="fas fa-chart-pie fa-xs"></i> Charts</button>
+</body>
+
+</html>
