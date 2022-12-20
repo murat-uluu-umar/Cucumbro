@@ -54,11 +54,11 @@ Look at example:
 
 ![](https://github.com/murat-uluu-umar/Warptimer/blob/%23feature-readme/Additions/User's%20statistics%203%20tab.PNG?raw=true)
 
-> ![](https://placehold.co/15x15/red/red.png) 1. This graph shows how many minutes you spent on sessions per day. Also, you can zoom and grab it.
+> ![](https://placehold.co/15x15/red/red.png) 1. This graph shows how many minutes you spent on sessions per day. Also, you can zoom and grab it. <br>
 -------------
-> ![](https://placehold.co/15x15/yellow/yellow.png) 2. Remember, ***you able to hide certain subjects, just click on their name/label.***
-> ![](https://placehold.co/15x15/yellow/yellow.png) 3. You'll return to day score panel by pressing it.
-> ![](https://placehold.co/15x15/yellow/yellow.png) 4. These buttons do what they do, you know...
+> ![](https://placehold.co/15x15/yellow/yellow.png) 2. Remember, ***you able to hide certain subjects, just click on their name/label.*** <br>
+> ![](https://placehold.co/15x15/yellow/yellow.png) 3. You'll return to day score panel by pressing it. <br>
+> ![](https://placehold.co/15x15/yellow/yellow.png) 4. These buttons do what they do, you know... <br>
 
 Okay just for clarity
  1. You can export your data as CSV file and do some manipulations in Excel.
