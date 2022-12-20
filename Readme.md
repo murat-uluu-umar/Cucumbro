@@ -1,10 +1,10 @@
 # Warptimer
 
-This extension will improve your efficiency. It based on time management technique - \"flowtime\". It counts your working time. And after you'll get rest time third of working time.
+This extension based on time management technique - \"flowtime\", it'll improve your efficiency and do some statistic calculations for you.  
 
 # Usage
 
-It's not marvellous util, that you cannot understand. Everythin as simple as possible. But however I'll explain it.
+This extension as simple as possible. But, I'll explain it.
 
 ## Warptimer UI
 ![](https://github.com/murat-uluu-umar/Warptimer/blob/%23feature-readme/Additions/Warp%20timer%20-%20start%20state.PNG?raw=true)
