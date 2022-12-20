@@ -18,7 +18,15 @@ class OverallGraph {
             time: {
               unit: "day"
             },
+            grid: {
+              color: '#08A1AA'
+            }
           },
+          y: {
+            grid: {
+              color: '#08A1AA'
+            }
+          }
         },
         radius: 7,
         plugins: {
