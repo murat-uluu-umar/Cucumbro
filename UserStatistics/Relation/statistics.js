@@ -124,7 +124,6 @@ function initHandlers() {
   calendar.onSelected = (idx) => {
     polarChart.update(idx.toLocaleDateString(), palette);
     dayGraph.update(idx.toLocaleDateString(), palette);
-    console.log(idx);
   };
   exportCSVBtn.onclick = () => {
     if (confirm("Data will be exported as CSV")) exportCsv();

@@ -196,7 +196,6 @@ function setBadge(text, color) {
 
 function addDataObject(type, start, end) {
   chrome.storage.local.get(["subject"]).then((result) => {
-    console.log(result.subject);
     if (result.subject !== "") {
       var obj = {
         day: new Date().toLocaleDateString(),

@@ -16,7 +16,7 @@ class DtpChart {
       },
     };
   }
-  update(total) {
+  update(total,palette) {
     if (day !== null) {
       var data = this.prepare(total);
       var config = {
