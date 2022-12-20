@@ -69,7 +69,7 @@ Okay just for clarity
     |02.12.2022| 7968 |    8354 |    4674 |
     |03.12.2022| 7892 |  44354 |    49574 |
     | etc.. | | | |
-    Those strange random digits are Excel's serial numbers, you just need to [format they as time](https://support.microsoft.com/en-us/office/format-numbers-as-dates-or-times-418bd3fe-0577-47c8-8caa-b4d30c528309#:~:text=On%20the%20Home%20tab%2C%20in,that%20you%20want%20to%20use.). 
+Those strange random digits are Excel's serial numbers, you just need to [format they as time](https://support.microsoft.com/en-us/office/format-numbers-as-dates-or-times-418bd3fe-0577-47c8-8caa-b4d30c528309#:~:text=On%20the%20Home%20tab%2C%20in,that%20you%20want%20to%20use.). 
  2. Also you able to make backups by exporting and importing json data. Play with it the way that you want. I give you permission :smiling_imp:
  3. And you may clear all your data if you want :man_shrugging: .
 
