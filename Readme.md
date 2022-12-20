@@ -42,10 +42,10 @@ It consists of two panels: day statistics and overall statistics.
 > ![](https://placehold.co/15x15/yellow/yellow.png) 5. This big panel plays button role. It switches view onto second “overall score/statistics” panel.
 
 ### It's time for outputs!
-> ![](https://placehold.co/15x15/red/red.png) 2. Here will be shown some detailed information of each session.
-> ![](https://placehold.co/15x15/red/red.png) 3. Here will be shown total amount of time spent on tasks etc.
-> ![](https://placehold.co/15x15/red/red.png) 4. It's circular chart **that will compare sessions duration**.
-> ![](https://placehold.co/15x15/red/red.png) 5. It’s chart similar to above that will **compare total amount of time spent on sessions with whole day** (16 hours - sessions).
+> ![](https://placehold.co/15x15/red/red.png) 2. Here will be shown some detailed information of each session. <br>
+> ![](https://placehold.co/15x15/red/red.png) 3. Here will be shown total amount of time spent on tasks etc. <br>
+> ![](https://placehold.co/15x15/red/red.png) 4. It's circular chart ***that will compare sessions duration***. <br>
+> ![](https://placehold.co/15x15/red/red.png) 5. It’s chart similar to above that will ***compare total amount of time spent on sessions with whole day*** (16 hours - sessions).
 
 Look at example:
 ![Example](https://github.com/murat-uluu-umar/Warptimer/blob/%23feature-readme/Additions/User's%20statistics%202%20tab.PNG?raw=true)
@@ -54,11 +54,11 @@ Look at example:
 
 ![](https://github.com/murat-uluu-umar/Warptimer/blob/%23feature-readme/Additions/User's%20statistics%203%20tab.PNG?raw=true)
 
-> ![](https://placehold.co/15x15/red/red.png) 1. This graph shows how many minutes you spent on sessions per day. Also, you can zoom and grab it.
+> ![](https://placehold.co/15x15/red/red.png) 1. This graph shows how many minutes you spent on sessions per day. Also, you can zoom and grab it. <br>
 -------------
-> ![](https://placehold.co/15x15/yellow/yellow.png) 2. Remember, ***you able to hide certain subjects, just click on their name/label.***
-> ![](https://placehold.co/15x15/yellow/yellow.png) 3. You'll return to day score panel by pressing it.
-> ![](https://placehold.co/15x15/yellow/yellow.png) 4. These buttons do what they do, you know...
+> ![](https://placehold.co/15x15/yellow/yellow.png) 2. Remember, ***you able to hide certain subjects, just click on their name/label.*** <br>
+> ![](https://placehold.co/15x15/yellow/yellow.png) 3. You'll return to day score panel by pressing it. <br>
+> ![](https://placehold.co/15x15/yellow/yellow.png) 4. These buttons do what they do, you know... <br>
 
 Okay just for clarity
  1. You can export your data as CSV file and do some manipulations in Excel.
@@ -69,7 +69,7 @@ Okay just for clarity
     |02.12.2022| 7968 |    8354 |    4674 |
     |03.12.2022| 7892 |  44354 |    49574 |
     | etc.. | | | |
-    Those strange random digits are Excel's serial numbers, you just need to [format they as time](https://support.microsoft.com/en-us/office/format-numbers-as-dates-or-times-418bd3fe-0577-47c8-8caa-b4d30c528309#:~:text=On%20the%20Home%20tab%2C%20in,that%20you%20want%20to%20use.). 
- 2. Also you able to make backups by exporting and importing json data. Play with it the way that you want. I give you permission :smiling_imp:
+Those strange random digits are Excel serial numbers, you just need to [format they as time](https://support.microsoft.com/en-us/office/format-numbers-as-dates-or-times-418bd3fe-0577-47c8-8caa-b4d30c528309#:~:text=On%20the%20Home%20tab%2C%20in,that%20you%20want%20to%20use.). <br> 
+ 2. Additionally, you able to make backups by exporting and importing json data. Play with it the way that you want. I give you permission :smiling_imp: <br>
  3. And you may clear all your data if you want :man_shrugging: .
 
