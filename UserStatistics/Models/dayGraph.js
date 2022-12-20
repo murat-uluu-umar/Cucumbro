@@ -36,7 +36,6 @@ class DayGraph {
       diverts: [],
     };
     result.forEach((p) => {
-      console.log(p);
       if (p.type === "rest") {
         item.rest = this.normalize(p.amount);
         data.push(item);
