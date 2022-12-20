@@ -42,9 +42,9 @@ It consists of two panels: day statistics and overall statistics.
 > ![](https://placehold.co/15x15/yellow/yellow.png) 5. This big panel plays button role. It switches view onto second “overall score/statistics” panel.
 
 ### It's time for outputs!
-> ![](https://placehold.co/15x15/red/red.png) 2. Here will be shown some detailed information of each session.<br>
-> ![](https://placehold.co/15x15/red/red.png) 3. Here will be shown total amount of time spent on tasks etc.<br>
-> ![](https://placehold.co/15x15/red/red.png) 4. It's circular chart **that will compare sessions duration**.<br>
+> ![](https://placehold.co/15x15/red/red.png) 2. Here will be shown some detailed information of each session. <br>
+> ![](https://placehold.co/15x15/red/red.png) 3. Here will be shown total amount of time spent on tasks etc. <br>
+> ![](https://placehold.co/15x15/red/red.png) 4. It's circular chart **that will compare sessions duration**. <br>
 > ![](https://placehold.co/15x15/red/red.png) 5. It’s chart similar to above that will **compare total amount of time spent on sessions with whole day** (16 hours - sessions).
 
 Look at example:
