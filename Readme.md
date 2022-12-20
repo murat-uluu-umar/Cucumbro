@@ -44,8 +44,8 @@ It consists of two panels: day statistics and overall statistics.
 ### It's time for outputs!
 > ![](https://placehold.co/15x15/red/red.png) 2. Here will be shown some detailed information of each session. <br>
 > ![](https://placehold.co/15x15/red/red.png) 3. Here will be shown total amount of time spent on tasks etc. <br>
-> ![](https://placehold.co/15x15/red/red.png) 4. It's circular chart **that will compare sessions duration**. <br>
-> ![](https://placehold.co/15x15/red/red.png) 5. It’s chart similar to above that will **compare total amount of time spent on sessions with whole day** (16 hours - sessions).
+> ![](https://placehold.co/15x15/red/red.png) 4. It's circular chart ***that will compare sessions duration***. <br>
+> ![](https://placehold.co/15x15/red/red.png) 5. It’s chart similar to above that will ***compare total amount of time spent on sessions with whole day*** (16 hours - sessions).
 
 Look at example:
 ![Example](https://github.com/murat-uluu-umar/Warptimer/blob/%23feature-readme/Additions/User's%20statistics%202%20tab.PNG?raw=true)
