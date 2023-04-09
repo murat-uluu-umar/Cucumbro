@@ -2,6 +2,10 @@
 
 This extension based on time management technique - \"flowtime\", it'll improve your efficiency and do some statistic calculations for you.  
 
+# Installation
+ - 1. Goto ![itch.io](https://murat-uulu-umar.itch.io/warptimer)
+ - 2. Download and extract .zip file somewhere you want .
+ - 3. Just open chrome://extensions/ and drag onto it that unpacked file.  
 # Usage
 
 This extension as simple as possible. But, I'll explain it.
